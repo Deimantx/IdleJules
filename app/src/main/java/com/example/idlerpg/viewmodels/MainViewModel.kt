@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.idlerpg.game.GameEngine
+import com.example.idlerpg.models.GearItem
 import com.example.idlerpg.models.Monster
 import com.example.idlerpg.models.Player
 import com.example.idlerpg.repository.GameRepository
@@ -28,27 +29,36 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     // Combat Log LiveData
     private val _combatLog = MutableLiveData<MutableList<String>>(mutableListOf())
     val combatLog: LiveData<MutableList<String>> = _combatLog
-    private val maxLogLines = 100 // Keep the log from growing indefinitely
+    private val maxLogLines = 100
+
+    // Shop LiveData
+    private val _shopItems = MutableLiveData<List<GearItem>>()
+    val shopItems: LiveData<List<GearItem>> = _shopItems
+
+    // Single event LiveData for messages like "Not enough coins"
+    private val _toastMessage = MutableLiveData<SingleEvent<String>>()
+    val toastMessage: LiveData<SingleEvent<String>> = _toastMessage
+
 
     init {
-        loadGame() // Load game state first
-        _playerData.value = _gameEngine.getPlayerStats()
+        loadGame()
+        _playerData.value = _gameEngine.getPlayerStats() // player.copy() effectively
         _monsterData.value = _gameEngine.currentMonster
+        _shopItems.value = _gameEngine.availableShopItems
         updateExperienceDisplay()
 
         _gameEngine.setOnMonsterDefeated {
-            // This callback might not be strictly needed here if UI updates through LiveData
-            _playerData.postValue(_gameEngine.getPlayerStats()) // Update player stats (coins, xp)
-            _monsterData.postValue(_gameEngine.currentMonster) // New monster
+            _playerData.postValue(_gameEngine.getPlayerStats())
+            _monsterData.postValue(_gameEngine.currentMonster)
             updateExperienceDisplay()
         }
         _gameEngine.setOnPlayerLeveledUp { player ->
-            _playerData.postValue(player)
+            _playerData.postValue(player) // player here is the direct reference from gameEngine
             updateExperienceDisplay()
         }
         _gameEngine.setOnCombatLog { message ->
             val currentLog = _combatLog.value ?: mutableListOf()
-            currentLog.add(0, message) // Add new messages to the top
+            currentLog.add(0, message)
             if (currentLog.size > maxLogLines) {
                 _combatLog.postValue(currentLog.take(maxLogLines).toMutableList())
             } else {
@@ -59,8 +69,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun manualAttack() {
         _gameEngine.fightTick()
-        _playerData.value = _gameEngine.getPlayerStats() // Update player after attack (HP)
-        _monsterData.value = _gameEngine.currentMonster // Update monster after attack (HP)
+        _playerData.value = _gameEngine.getPlayerStats()
+        _monsterData.value = _gameEngine.currentMonster
     }
 
     fun autoFightTick() {
@@ -75,25 +85,83 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _playerExperienceDisplay.postValue("${player.experience} / $expNeeded")
     }
 
+    fun spendSkillPointAttack() {
+        if (_gameEngine.spendSkillPointOnAttack()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Attack (No points?).")
+        }
+    }
+
+    fun spendSkillPointDefense() {
+        if (_gameEngine.spendSkillPointOnDefense()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+             _toastMessage.value = SingleEvent("Failed to spend skill point on Defense (No points?).")
+        }
+    }
+
+    fun spendSkillPointMaxHp() {
+        if (_gameEngine.spendSkillPointOnMaxHp()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Max HP (No points?).")
+        }
+    }
+
+    fun buyShopItem(item: GearItem) {
+        val message = _gameEngine.buyItem(item)
+        _playerData.value = _gameEngine.getPlayerStats() // Update player data (coins, equipped items)
+        _toastMessage.value = SingleEvent(message)
+    }
+
     fun saveGame() {
         _repository.savePlayer(_gameEngine.player)
-        _combatLog.value?.add(0, "Game Saved!")
+        // Avoid direct manipulation of combatLog here if it's purely for game events
+        // _combatLog.value?.add(0, "Game Saved!") // This could be a toast or a separate status
+         _toastMessage.value = SingleEvent("Game Saved!")
     }
 
     private fun loadGame() {
         val loadedPlayer = _repository.loadPlayer()
         if (loadedPlayer != null) {
             _gameEngine.player = loadedPlayer
-            _combatLog.value?.add(0,"Game Loaded!")
+             _combatLog.value?.add(0,"Game Loaded!") // Keep this log as it's part of game state
         } else {
-            _combatLog.value?.add(0,"No saved game found. Starting new game.")
+             _combatLog.value?.add(0,"No saved game found. Starting new game.")
         }
-        // Ensure currentHp is not greater than maxHp after loading, could happen if maxHp formula changes
         _gameEngine.player.currentHp = _gameEngine.player.currentHp.coerceAtMost(_gameEngine.player.maxHp)
     }
 
     override fun onCleared() {
         super.onCleared()
-        saveGame() // Save game when ViewModel is cleared (e.g. activity destroyed)
+        saveGame()
     }
+}
+
+/**
+ * Used as a wrapper for data that is exposed via a LiveData that represents an event.
+ * Useful for displaying messages like Toasts or Snackbars once.
+ */
+open class SingleEvent<out T>(private val content: T) {
+    @Suppress("MemberVisibilityCanBePrivate")
+    var hasBeenHandled = false
+        private set // Allow external read but not write
+
+    /**
+     * Returns the content and prevents its use again.
+     */
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
+            null
+        } else {
+            hasBeenHandled = true
+            content
+        }
+    }
+
+    /**
+     * Returns the content, even if it's already been handled.
+     */
+    fun peekContent(): T = content
 }
