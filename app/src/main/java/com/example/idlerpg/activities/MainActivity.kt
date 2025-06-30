@@ -10,12 +10,14 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.idlerpg.R
+import com.example.idlerpg.ui.ShopDialogFragment // Import the dialog
 import com.example.idlerpg.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModels()
 
+    // Player Info UI
     private lateinit var tvPlayerLevel: TextView
     private lateinit var tvPlayerExperience: TextView
     private lateinit var tvPlayerHP: TextView
@@ -23,9 +25,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvPlayerDefense: TextView
     private lateinit var tvPlayerCoins: TextView
 
+    // Skill Points UI
+    private lateinit var tvPlayerSkillPoints: TextView
+    private lateinit var btnIncreaseAttack: Button
+    private lateinit var btnIncreaseDefense: Button
+    private lateinit var btnIncreaseMaxHp: Button
+
+    // Monster Info UI
     private lateinit var tvMonsterName: TextView
     private lateinit var tvMonsterHP: TextView
 
+    // Other UI
     private lateinit var tvCombatLog: TextView
     private lateinit var btnManualAttack: Button
     private lateinit var btnShop: Button
@@ -52,6 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initializeUI() {
+        // Player Info
         tvPlayerLevel = findViewById(R.id.tvPlayerLevel)
         tvPlayerExperience = findViewById(R.id.tvPlayerExperience)
         tvPlayerHP = findViewById(R.id.tvPlayerHP)
@@ -59,11 +70,19 @@ class MainActivity : AppCompatActivity() {
         tvPlayerDefense = findViewById(R.id.tvPlayerDefense)
         tvPlayerCoins = findViewById(R.id.tvPlayerCoins)
 
+        // Skill Points
+        tvPlayerSkillPoints = findViewById(R.id.tvPlayerSkillPoints)
+        btnIncreaseAttack = findViewById(R.id.btnIncreaseAttack)
+        btnIncreaseDefense = findViewById(R.id.btnIncreaseDefense)
+        btnIncreaseMaxHp = findViewById(R.id.btnIncreaseMaxHp)
+
+        // Monster Info
         tvMonsterName = findViewById(R.id.tvMonsterName)
         tvMonsterHP = findViewById(R.id.tvMonsterHP)
 
+        // Other
         tvCombatLog = findViewById(R.id.tvCombatLog)
-        tvCombatLog.movementMethod = ScrollingMovementMethod() // Enable scrolling
+        tvCombatLog.movementMethod = ScrollingMovementMethod()
 
         btnManualAttack = findViewById(R.id.btnManualAttack)
         btnShop = findViewById(R.id.btnShop)
@@ -74,9 +93,17 @@ class MainActivity : AppCompatActivity() {
             player?.let {
                 tvPlayerLevel.text = "Level: ${it.level}"
                 tvPlayerHP.text = "HP: ${it.currentHp} / ${it.maxHp}"
-                tvPlayerAttack.text = "Attack: ${it.attack + (it.equippedWeapon?.attackBonus ?: 0)}"
-                tvPlayerDefense.text = "Defense: ${it.defense + (it.equippedArmor?.defenseBonus ?: 0)}"
+                // Use effectiveAttack and effectiveDefense from Player model
+                tvPlayerAttack.text = "Attack: ${it.effectiveAttack} (Base: ${it.attack})"
+                tvPlayerDefense.text = "Defense: ${it.effectiveDefense} (Base: ${it.defense})"
                 tvPlayerCoins.text = "Coins: ${it.coins}"
+                tvPlayerSkillPoints.text = "Available Skill Points: ${it.skillPoints}"
+
+                // Enable/disable skill point buttons
+                val hasSkillPoints = it.skillPoints > 0
+                btnIncreaseAttack.isEnabled = hasSkillPoints
+                btnIncreaseDefense.isEnabled = hasSkillPoints
+                btnIncreaseMaxHp.isEnabled = hasSkillPoints
             }
         }
 
@@ -96,10 +123,14 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.combatLog.observe(this) { logMessages ->
             tvCombatLog.text = logMessages.joinToString("\n")
-            // Scroll to the top to see the latest message when log is updated
-            // (since new messages are added to the start of the list in ViewModel)
-            if (tvCombatLog.lineCount > 0) { // Check to prevent issues if text is empty
+            if (tvCombatLog.lineCount > 0) {
                 tvCombatLog.scrollTo(0, 0)
+            }
+        }
+
+        viewModel.toastMessage.observe(this) { event ->
+            event.getContentIfNotHandled()?.let { message ->
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -110,8 +141,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnShop.setOnClickListener {
-            // TODO: Implement shop functionality
-            Toast.makeText(this, "Shop not implemented yet!", Toast.LENGTH_SHORT).show()
+            ShopDialogFragment().show(supportFragmentManager, ShopDialogFragment.TAG)
+        }
+
+        btnIncreaseAttack.setOnClickListener {
+            viewModel.spendSkillPointAttack()
+        }
+        btnIncreaseDefense.setOnClickListener {
+            viewModel.spendSkillPointDefense()
+        }
+        btnIncreaseMaxHp.setOnClickListener {
+            viewModel.spendSkillPointMaxHp()
         }
     }
 
@@ -123,6 +163,6 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         gameLoopHandler.removeCallbacks(autoFightRunnable)
-        viewModel.saveGame() // Save game when activity is paused
+        viewModel.saveGame()
     }
 }
