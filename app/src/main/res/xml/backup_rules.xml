@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- TODO: Define backup rules for Auto Backup -->
+    <!-- Include shared preferences -->
+    <include domain="sharedpref" path="."/>
+    <!-- Exclude specific files or directories if necessary -->
+    <!-- <exclude domain="sharedpref" path="device_specific.xml"/> -->
+</full-backup-content>
