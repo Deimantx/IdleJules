@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".activities.MainActivity">
+
+        <!-- Player Info Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:text="Player Info" />
+
+        <TextView
+            android:id="@+id/tvPlayerLevel"
+            style="@style/StatText"
+            android:text="Level: 1" />
+
+        <TextView
+            android:id="@+id/tvPlayerExperience"
+            style="@style/StatText"
+            android:text="XP: 0 / 100" />
+
+        <TextView
+            android:id="@+id/tvPlayerHP"
+            style="@style/StatText"
+            android:text="HP: 100 / 100" />
+
+        <TextView
+            android:id="@+id/tvPlayerAttack"
+            style="@style/StatText"
+            android:text="Attack: 10" />
+
+        <TextView
+            android:id="@+id/tvPlayerDefense"
+            style="@style/StatText"
+            android:text="Defense: 5" />
+
+        <TextView
+            android:id="@+id/tvPlayerCoins"
+            style="@style/StatText"
+            android:text="Coins: 0" />
+
+        <!-- Skill Points Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Skill Points" />
+
+        <TextView
+            android:id="@+id/tvPlayerSkillPoints"
+            style="@style/StatText"
+            android:text="Available Skill Points: 0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnIncreaseAttack"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="+ ATK" />
+
+            <Button
+                android:id="@+id/btnIncreaseDefense"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="+ DEF" />
+
+            <Button
+                android:id="@+id/btnIncreaseMaxHp"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="+ HP" />
+        </LinearLayout>
+
+
+        <!-- Monster Info Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Monster Info" />
+
+        <TextView
+            android:id="@+id/tvMonsterName"
+            style="@style/StatText"
+            android:text="Monster: Slime" />
+
+        <TextView
+            android:id="@+id/tvMonsterHP"
+            style="@style/StatText"
+            android:text="HP: 30" />
+
+        <!-- Combat Log Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Combat Log" />
+
+        <TextView
+            android:id="@+id/tvCombatLog"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:background="#f0f0f0"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:text="Combat log starts here..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <!-- Action Buttons Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnManualAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Manual Attack" />
+
+            <Button
+                android:id="@+id/btnShop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shop" /> <!-- Updated text -->
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

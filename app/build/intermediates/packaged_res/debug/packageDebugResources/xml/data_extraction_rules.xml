@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- TODO: Define backup rules for cloud backup -->
+        <include domain="sharedpref" path="."/>
+        <!-- Exclude specific shared preferences files or paths if necessary -->
+        <!-- <exclude domain="sharedpref" path="device.xml"/> -->
+    </cloud-backup>
+    <device-transfer>
+        <!-- TODO: Define rules for device-to-device transfer -->
+        <include domain="sharedpref" path="."/>
+        <!-- <exclude domain="sharedpref" path="device.xml"/> -->
+    </device-transfer>
+</data-extraction-rules>
