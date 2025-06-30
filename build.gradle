@@ -2,7 +2,7 @@
 buildscript {
     ext {
         kotlin_version = '1.8.20' // Ensure this matches or is compatible with app/build.gradle
-        agp_version = '8.0.2' // Android Gradle Plugin version, check for latest compatible
+        agp_version = '8.10.1' // Android Gradle Plugin version, check for latest compatible
     }
     repositories {
         google()
@@ -14,13 +14,6 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
     }
 }
 

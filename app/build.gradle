@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.example.idlerpg'
-    compileSdk 33 // Target Android 13 (Tiramisu) - common recent version
+    compileSdk 35 // Target Android 13 (Tiramisu) - common recent version
 
     defaultConfig {
         applicationId "com.example.idlerpg"
         minSdk 24 // Android 7.0 (Nougat) - good balance of features and device reach
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -42,11 +42,12 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1' // or latest
     implementation 'com.google.android.material:material:1.9.0' // or latest
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4' // or latest
+    implementation 'androidx.fragment:fragment-ktx:1.7.1' // Or the latest stable version for fragment-ktx
 
     // ViewModel
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1' // or latest
     // Activity KTX for by viewModels()
-    implementation 'androidx.activity:activity-ktx:1.7.2' // or latest
+    implementation 'androidx.activity:activity-ktx:1.10.1' // or latest
 
     // Gson for SharedPreferences object serialization
     implementation 'com.google.code.gson:gson:2.10.1' // or latest

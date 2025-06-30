@@ -40,7 +40,6 @@
         android:id="@+id/btnBuyItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="?android:attr/buttonSmall"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:text="Buy" />
-
 </LinearLayout>
