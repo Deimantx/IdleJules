@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        tools:context=".activities.MainActivity">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Player Info"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvPlayerLevel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Level: 1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvPlayerExperience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="XP: 0 / 100"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvPlayerHP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HP: 100 / 100"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvPlayerAttack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attack: 10"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvPlayerDefense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Defense: 5"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvPlayerCoins"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Coins: 0"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monster Info"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvMonsterName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monster: Slime"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tvMonsterHP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HP: 30"
+            android:textSize="16sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Combat Log"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvCombatLog"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="8dp"
+            android:background="#f0f0f0"
+            android:padding="8dp"
+            android:scrollbars="vertical"
+            android:text="Combat log starts here..."
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btnManualAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:text="Manual Attack" />
+
+            <Button
+                android:id="@+id/btnShop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shop (Placeholder)" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
