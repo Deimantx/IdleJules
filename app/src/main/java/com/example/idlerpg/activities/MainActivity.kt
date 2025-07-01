@@ -190,29 +190,28 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.playerExperienceDisplay.observe(this) { experienceText ->
-            // Update progress bar
+            tvPlayerExperience.text = "XP: $experienceText"
+            
+            // Update progress bar with simple calculation
             viewModel.playerData.value?.let { player ->
-                val currentExp = player.experience
-                val expForCurrentLevel = player.getExperienceForLevel(player.level)
-                val expForNextLevel = player.getExperienceForLevel(player.level + 1)
-                val expInCurrentLevel = currentExp - expForCurrentLevel
-                val expNeededForNextLevel = expForNextLevel - expForCurrentLevel
-                
-                if (expNeededForNextLevel > 0) {
-                    val progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
-                    progressBarExperience.max = 100
-                    progressBarExperience.progress = progressPercentage.coerceIn(0, 100)
+                try {
+                    val currentExp = player.experience
+                    val expForCurrentLevel = player.getExperienceForLevel(player.level)
+                    val expForNextLevel = player.getExperienceForLevel(player.level + 1)
+                    val expInCurrentLevel = maxOf(0, currentExp - expForCurrentLevel)
+                    val expNeededForNextLevel = maxOf(1, expForNextLevel - expForCurrentLevel)
                     
-                    // Show experience with progress percentage for debugging
-                    tvPlayerExperience.text = "XP: $experienceText (${progressPercentage}%)"
-                } else {
+                    val progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
+                    val clampedProgress = progressPercentage.coerceIn(0, 100)
+                    
                     progressBarExperience.max = 100
-                    progressBarExperience.progress = 100
-                    tvPlayerExperience.text = "XP: $experienceText (MAX)"
+                    progressBarExperience.progress = clampedProgress
+                } catch (e: Exception) {
+                    // Fallback to simple calculation if experience system is different
+                    progressBarExperience.max = 100
+                    progressBarExperience.progress = 50 // Default to 50% if calculation fails
                 }
             } ?: run {
-                // Fallback if no player data
-                tvPlayerExperience.text = "XP: $experienceText"
                 progressBarExperience.progress = 0
             }
         }

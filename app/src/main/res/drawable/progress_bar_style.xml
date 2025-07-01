@@ -2,26 +2,16 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Background -->
     <item android:id="@android:id/background">
-        <shape>
+        <shape android:shape="rectangle">
             <corners android:radius="6dp" />
             <solid android:color="@color/progress_bar_background" />
         </shape>
     </item>
     
-    <!-- Secondary Progress (optional) -->
-    <item android:id="@android:id/secondaryProgress">
-        <clip>
-            <shape>
-                <corners android:radius="6dp" />
-                <solid android:color="@color/progress_bar_secondary" />
-            </shape>
-        </clip>
-    </item>
-    
     <!-- Primary Progress -->
     <item android:id="@android:id/progress">
         <clip>
-            <shape>
+            <shape android:shape="rectangle">
                 <corners android:radius="6dp" />
                 <solid android:color="@color/progress_bar_primary" />
             </shape>
