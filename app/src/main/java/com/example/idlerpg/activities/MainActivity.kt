@@ -190,8 +190,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.playerExperienceDisplay.observe(this) { experienceText ->
-            tvPlayerExperience.text = "XP: $experienceText"
-            
             // Update progress bar
             viewModel.playerData.value?.let { player ->
                 val currentExp = player.experience
@@ -202,10 +200,20 @@ class MainActivity : AppCompatActivity() {
                 
                 if (expNeededForNextLevel > 0) {
                     val progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
-                    progressBarExperience.progress = progressPercentage
+                    progressBarExperience.max = 100
+                    progressBarExperience.progress = progressPercentage.coerceIn(0, 100)
+                    
+                    // Show experience with progress percentage for debugging
+                    tvPlayerExperience.text = "XP: $experienceText (${progressPercentage}%)"
                 } else {
+                    progressBarExperience.max = 100
                     progressBarExperience.progress = 100
+                    tvPlayerExperience.text = "XP: $experienceText (MAX)"
                 }
+            } ?: run {
+                // Fallback if no player data
+                tvPlayerExperience.text = "XP: $experienceText"
+                progressBarExperience.progress = 0
             }
         }
 
