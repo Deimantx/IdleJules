@@ -50,8 +50,6 @@ class ShopItemAdapter(
         private val tvItemHit: TextView = itemView.findViewById(R.id.tvItemHit)
 
 
-        // Constructor remains simple
-        constructor(itemView: View) : super(itemView)
 
         fun bind(
             gearItem: GearItem,

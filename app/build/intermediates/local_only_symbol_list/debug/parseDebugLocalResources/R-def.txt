@@ -1,14 +1,20 @@
 R_DEF: Internal format may change without notice
 local
 color black
+color combat_stat_bg
 color purple_200
 color purple_500
 color purple_700
+color section_divider
+color stat_accent
+color stat_primary
+color stat_secondary
 color teal_200
 color teal_700
 color white
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+drawable progress_bar_style
 id btnBuyItem
 id btnCloseComparison
 id btnCloseShop
@@ -21,12 +27,14 @@ id btnSelectLocation
 id btnSelectMonster
 id btnShop
 id llItemStatsContainer
+id progressBarExperience
 id rvShopBuyItems
 id rvShopSellItems
 id shopTabLayout
 id shopViewPager
 id spinnerLocationSelect
 id spinnerMonsterSelect
+id tvAttackSpeed
 id tvCombatLog
 id tvCompEquippedAttack
 id tvCompEquippedAttackSpeed
@@ -46,6 +54,10 @@ id tvCompSelectedDefense
 id tvCompSelectedDodge
 id tvCompSelectedHit
 id tvCompSelectedName
+id tvCritDamage
+id tvCritRate
+id tvDodgeChance
+id tvHitChance
 id tvItemAttackBonus
 id tvItemAttackSpeed
 id tvItemCost
@@ -81,6 +93,11 @@ layout layout_shop_item
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
+style CharacterStatText
+style CombatStatText
+style MainStatText
+style ProgressBarStyle
+style SectionDivider
 style SectionHeader
 style StatText
 style Theme.IdleRPG
