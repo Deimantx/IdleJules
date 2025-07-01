@@ -1,6 +1,7 @@
 package com.example.idlerpg.game
 
 import com.example.idlerpg.models.GearItem
+import com.example.idlerpg.models.ItemType
 import com.example.idlerpg.models.Monster
 import com.example.idlerpg.models.MonsterAbility
 import com.example.idlerpg.models.Player
