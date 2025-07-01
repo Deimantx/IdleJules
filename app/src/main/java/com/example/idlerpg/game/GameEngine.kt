@@ -8,10 +8,17 @@ import kotlin.math.max
 import kotlin.math.pow
 import kotlin.random.Random
 
+enum class Location {
+    FOREST,
+    MINE,
+    OUTSKIRTS
+}
+
 class GameEngine {
     var player: Player = Player() // Initialize with a default player
     var currentMonster: Monster? = null
     var selectedMonsterName: String? = null
+    var selectedLocation: Location? = null
 
     private var monsterDefeatedCallback: ((Monster) -> Unit)? = null
     private var playerLeveledUpCallback: ((Player) -> Unit)? = null
@@ -50,13 +57,33 @@ class GameEngine {
         combatLogCallback = callback
     }
     
+    fun selectLocation(location: Location) {
+        selectedLocation = location
+        selectedMonsterName = null // Clear selected monster when changing location
+        currentMonster = null
+        combatLogCallback?.invoke("Selected location: ${location.name.lowercase().replaceFirstChar { it.uppercase() }}")
+        combatLogCallback?.invoke("Choose a monster to fight in this location!")
+    }
+    
     fun selectMonster(monsterName: String) {
         selectedMonsterName = monsterName
         spawnSelectedMonster()
     }
     
+    fun getAvailableLocations(): List<Location> {
+        return Location.values().toList()
+    }
+    
     fun getAvailableMonsters(): List<String> {
         return MonsterFactory.getAllMonsterNames()
+    }
+    
+    fun getMonstersForLocation(location: Location): List<String> {
+        return when (location) {
+            Location.FOREST -> listOf("Forest Wolf", "Giant Rat", "Goblin Scout", "Vampire Bat", "Shadow Demon")
+            Location.MINE -> listOf("Skeleton Warrior", "Stone Golem", "Ancient Lich", "Orc Warrior", "Troll Berserker")
+            Location.OUTSKIRTS -> listOf("Fire Elemental", "Young Dragon", "Vampire Bat", "Shadow Demon", "Troll Berserker")
+        }
     }
     
     fun getMonstersForPlayerLevel(): List<String> {
@@ -145,9 +172,9 @@ class GameEngine {
         if (isCritical) {
             val critMultiplier = player.critDamageMultiplier + (player.equippedWeapon?.critDamageBonus ?: 0f)
             damage = (damage * critMultiplier).toInt()
-            combatLogCallback?.invoke("CRITICAL HIT! Player deals $damage damage to ${monster.name}!")
+            combatLogCallback?.invoke("<font color='#0080FF'>CRITICAL HIT! Player deals $damage damage to ${monster.name}!</font>")
         } else {
-            combatLogCallback?.invoke("Player attacks ${monster.name} for $damage damage.")
+            combatLogCallback?.invoke("<font color='#0080FF'>Player attacks ${monster.name} for $damage damage.</font>")
         }
         
         monster.hp -= damage
@@ -191,9 +218,9 @@ class GameEngine {
         
         if (isCritical) {
             damage = (damage * monster.critDamage).toInt()
-            combatLogCallback?.invoke("${monster.name} lands a CRITICAL HIT for $damage damage!")
+            combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} lands a CRITICAL HIT for $damage damage!</font>")
         } else {
-            combatLogCallback?.invoke("${monster.name} attacks for $damage damage.")
+            combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} attacks for $damage damage.</font>")
         }
         
         player.currentHp -= damage
@@ -206,7 +233,7 @@ class GameEngine {
                 if (Random.nextInt(100) < monster.abilityPower) {
                     val critDamage = calculateMonsterDamage(monster) * 2
                     player.currentHp -= critDamage
-                    combatLogCallback?.invoke("${monster.name} lands a CRITICAL HIT for $critDamage damage!")
+                    combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} lands a CRITICAL HIT for $critDamage damage!</font>")
                 } else {
                     performBasicMonsterAttack(monster)
                 }
@@ -215,23 +242,23 @@ class GameEngine {
                 val damage = calculateMonsterDamage(monster)
                 player.currentHp -= damage
                 player.addStatusEffect("poison", 3, monster.abilityPower)
-                combatLogCallback?.invoke("${monster.name} attacks with poison for $damage damage and applies poison!")
+                combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} attacks with poison for $damage damage and applies poison!</font>")
             }
             MonsterAbility.LIFE_STEAL -> {
                 val damage = calculateMonsterDamage(monster)
                 val healAmount = (damage * monster.abilityPower / 100).coerceAtLeast(1)
                 player.currentHp -= damage
                 monster.hp = (monster.hp + healAmount).coerceAtMost(monster.maxHp)
-                combatLogCallback?.invoke("${monster.name} drains life for $damage damage and heals $healAmount HP!")
+                combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} drains life for $damage damage and heals $healAmount HP!</font>")
             }
             MonsterAbility.STUN_CHANCE -> {
                 val damage = calculateMonsterDamage(monster)
                 player.currentHp -= damage
                 if (Random.nextInt(100) < monster.abilityPower) {
                     player.isStunned = true
-                    combatLogCallback?.invoke("${monster.name} attacks for $damage damage and stuns the player!")
+                    combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} attacks for $damage damage and stuns the player!</font>")
                 } else {
-                    combatLogCallback?.invoke("${monster.name} attacks for $damage damage.")
+                    combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} attacks for $damage damage.</font>")
                 }
                 monster.useAbility() // Set cooldown
             }
@@ -239,7 +266,7 @@ class GameEngine {
                 val damage1 = calculateMonsterDamage(monster)
                 val damage2 = calculateMonsterDamage(monster)
                 player.currentHp -= (damage1 + damage2)
-                combatLogCallback?.invoke("${monster.name} attacks twice for $damage1 + $damage2 damage!")
+                combatLogCallback?.invoke("<font color='#FF0000'>${monster.name} attacks twice for $damage1 + $damage2 damage!</font>")
                 monster.useAbility() // Set cooldown
             }
             MonsterAbility.REGENERATION -> {
@@ -284,15 +311,21 @@ class GameEngine {
     }
     
     private fun handleMonsterDefeat(monster: Monster) {
-        combatLogCallback?.invoke("${monster.name} defeated!")
+        combatLogCallback?.invoke("<font color='#FFD700'>${monster.name} defeated! Gained ${monster.experienceReward} XP and ${monster.coinReward} gold!</font>")
         player.experience += monster.experienceReward.toLong()
         player.coins += monster.coinReward
         monsterDefeatedCallback?.invoke(monster)
         checkPlayerLevelUp()
         
-        // Clear current monster - player must select a new one
-        currentMonster = null
-        combatLogCallback?.invoke("Select a new monster to fight!")
+        // Reset player HP and Mana after each fight
+        player.currentHp = player.effectiveMaxHp
+        player.currentMana = player.effectiveMaxMana
+        player.statusEffects.clear()
+        player.isStunned = false
+        combatLogCallback?.invoke("Player restored to full health and mana!")
+        
+        // Auto-respawn the same monster
+        spawnSelectedMonster()
     }
     
     private fun handlePlayerDeath() {
@@ -349,7 +382,7 @@ class GameEngine {
         if (player.skillPoints > 0) {
             player.skillPoints--
             player.agility++
-            combatLogCallback?.invoke("Spent 1 skill point on Agility. AGI: ${player.agility} (+0.5% Crit Rate, +0.3% Dodge, +0.4% Hit, -50ms Attack Speed)")
+            combatLogCallback?.invoke("Spent 1 skill point on Agility. AGI: ${player.agility} (+0.5% Crit Rate, +0.3% Dodge, +0.4% Hit)")
             return true
         }
         combatLogCallback?.invoke("Not enough skill points to increase Agility.")

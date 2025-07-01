@@ -62,7 +62,7 @@ data class Player(
         
     // Attack speed affected by agility and weapon - lower is faster
     val effectiveAttackSpeed: Float
-        get() = (baseAttackSpeed - (agility * 50f) + (equippedWeapon?.attackSpeedBonus ?: 0f)).coerceAtLeast(500f) // Min 0.5 seconds
+        get() = (baseAttackSpeed + (equippedWeapon?.attackSpeedBonus ?: 0f)).coerceAtLeast(500f) // Min 0.5 seconds, removed agility bonus
     
     // Add a status effect
     fun addStatusEffect(type: String, duration: Int, value: Int) {

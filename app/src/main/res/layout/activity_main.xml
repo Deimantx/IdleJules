@@ -66,12 +66,16 @@
         <TextView
             android:id="@+id/tvPlayerStats"
             style="@style/StatText"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"
             android:text="STR: 5 | AGI: 5 | INT: 5 | VIT: 5 | SPR: 5" />
 
         <TextView
             android:id="@+id/tvPlayerCombatStats"
             style="@style/StatText"
             android:textSize="12sp"
+            android:layout_marginBottom="8dp"
             android:text="Crit Rate: 2.5% | Crit Dmg: 175% | Dodge: 1.5% | Hit: 87% | Speed: 2.0s" />
 
         <!-- Skill Points Section -->
@@ -138,6 +142,32 @@
                 android:layout_weight="1"
                 android:layout_marginStart="2dp"
                 android:text="+ SPR" />
+        </LinearLayout>
+
+        <!-- Location Selection Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Location Selection" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Spinner
+                android:id="@+id/spinnerLocationSelect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnSelectLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select" />
         </LinearLayout>
 
         <!-- Monster Selection Section -->
