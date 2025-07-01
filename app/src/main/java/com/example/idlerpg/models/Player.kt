@@ -18,11 +18,20 @@ data class Player(
     var attack: Int = 10, // Base attack - now derived from STR
     var defense: Int = 5, // Base defense 
     var coins: Int = 0,
+    
+    // Equipment slots - existing
     var equippedWeapon: GearItem? = null,
     var equippedArmor: GearItem? = null,
     var equippedShield: GearItem? = null,
     var equippedAmulet: GearItem? = null,
     var equippedRing: GearItem? = null,
+    
+    // Equipment slots - new
+    var equippedBelt: GearItem? = null,
+    var equippedGloves: GearItem? = null,
+    var equippedBoots: GearItem? = null,
+    var equippedCloak: GearItem? = null,
+    
     var skillPoints: Int = 0,
     var inventory: MutableList<GearItem> = mutableListOf(),
     var statusEffects: MutableList<StatusEffect> = mutableListOf(),
@@ -39,71 +48,96 @@ data class Player(
     var baseAttackSpeed: Float = 2000f, // 2 seconds base
     var lastAttackTime: Long = 0L
 ) {
+    // Helper function to get all equipment items
+    private fun getAllEquipment(): List<GearItem> {
+        return listOfNotNull(
+            equippedWeapon,
+            equippedArmor,
+            equippedShield,
+            equippedAmulet,
+            equippedRing,
+            equippedBelt,
+            equippedGloves,
+            equippedBoots,
+            equippedCloak
+        )
+    }
+    
     // Effective stats including gear bonuses and stat-based calculations
+    val effectiveStrength: Int
+        get() = strength + getAllEquipment().sumOf { it.strengthBonus }
+    
+    val effectiveAgility: Int
+        get() = agility + getAllEquipment().sumOf { it.agilityBonus }
+    
+    val effectiveIntelligence: Int
+        get() = intelligence + getAllEquipment().sumOf { it.intelligenceBonus }
+    
+    val effectiveVitality: Int
+        get() = vitality + getAllEquipment().sumOf { it.vitalityBonus }
+    
+    val effectiveSpirit: Int
+        get() = spirit + getAllEquipment().sumOf { it.spiritBonus }
+    
     val effectiveAttack: Int
-        get() = (attack + strength * 2 + 
-                (equippedWeapon?.attackBonus ?: 0) +
-                (equippedShield?.attackBonus ?: 0) +
-                (equippedAmulet?.attackBonus ?: 0) +
-                (equippedRing?.attackBonus ?: 0))
+        get() = (attack + effectiveStrength * 2 + 
+                getAllEquipment().sumOf { it.attackBonus })
 
     val effectiveDefense: Int
-        get() = defense + 
-                (equippedArmor?.defenseBonus ?: 0) +
-                (equippedShield?.defenseBonus ?: 0) +
-                (equippedAmulet?.defenseBonus ?: 0) +
-                (equippedRing?.defenseBonus ?: 0)
+        get() = defense + getAllEquipment().sumOf { it.defenseBonus }
     
     val effectiveMaxHp: Int
-        get() = maxHp + (vitality * 10) +
-                (equippedArmor?.hpBonus ?: 0) +
-                (equippedShield?.hpBonus ?: 0) +
-                (equippedAmulet?.hpBonus ?: 0) +
-                (equippedRing?.hpBonus ?: 0)
+        get() = maxHp + (effectiveVitality * 10) +
+                getAllEquipment().sumOf { it.hpBonus }
         
     val effectiveMaxMana: Int
-        get() = maxMana + (intelligence * 5) + (spirit * 8) +
-                (equippedArmor?.manaBonus ?: 0) +
-                (equippedShield?.manaBonus ?: 0) +
-                (equippedAmulet?.manaBonus ?: 0) +
-                (equippedRing?.manaBonus ?: 0)
+        get() = maxMana + (effectiveIntelligence * 5) + (effectiveSpirit * 8) +
+                getAllEquipment().sumOf { it.manaBonus }
     
     // Combat stats derived from attributes
     val critRate: Float
-        get() = ((agility * 0.5f) +
-                (equippedWeapon?.critRateBonus ?: 0f) +
-                (equippedShield?.critRateBonus ?: 0f) +
-                (equippedAmulet?.critRateBonus ?: 0f) +
-                (equippedRing?.critRateBonus ?: 0f)).coerceAtMost(50f) // Max 50% crit rate
+        get() = ((effectiveAgility * 0.5f) +
+                getAllEquipment().sumOf { it.critRateBonus }).coerceAtMost(50f) // Max 50% crit rate
         
     val critDamageMultiplier: Float
-        get() = 1.5f + (strength * 0.05f) +
-                (equippedWeapon?.critDamageBonus ?: 0f) +
-                (equippedShield?.critDamageBonus ?: 0f) +
-                (equippedAmulet?.critDamageBonus ?: 0f) +
-                (equippedRing?.critDamageBonus ?: 0f) // Base 150% + 5% per STR
+        get() = 1.5f + (effectiveStrength * 0.05f) +
+                getAllEquipment().sumOf { it.critDamageBonus } // Base 150% + 5% per STR
         
     val dodgeChance: Float
-        get() = ((agility * 0.3f) +
-                (equippedArmor?.dodgeBonus ?: 0f) +
-                (equippedShield?.dodgeBonus ?: 0f) +
-                (equippedAmulet?.dodgeBonus ?: 0f) +
-                (equippedRing?.dodgeBonus ?: 0f)).coerceAtMost(25f) // Max 25% dodge chance
+        get() = ((effectiveAgility * 0.3f) +
+                getAllEquipment().sumOf { it.dodgeBonus }).coerceAtMost(25f) // Max 25% dodge chance
         
     val hitChance: Float
-        get() = (85f + (agility * 0.4f) +
-                (equippedWeapon?.hitBonus ?: 0f) +
-                (equippedShield?.hitBonus ?: 0f) +
-                (equippedAmulet?.hitBonus ?: 0f) +
-                (equippedRing?.hitBonus ?: 0f)).coerceAtMost(95f) // Base 85%, max 95%
+        get() = (85f + (effectiveAgility * 0.4f) +
+                getAllEquipment().sumOf { it.hitBonus }).coerceAtMost(95f) // Base 85%, max 95%
         
-    // Attack speed affected by agility and weapon - lower is faster
+    // Attack speed affected by agility and equipment - lower is faster
     val effectiveAttackSpeed: Float
         get() = (baseAttackSpeed + 
-                (equippedWeapon?.attackSpeedBonus ?: 0f) +
-                (equippedShield?.attackSpeedBonus ?: 0f) +
-                (equippedAmulet?.attackSpeedBonus ?: 0f) +
-                (equippedRing?.attackSpeedBonus ?: 0f)).coerceAtLeast(500f) // Min 0.5 seconds
+                getAllEquipment().sumOf { it.attackSpeedBonus }).coerceAtLeast(500f) // Min 0.5 seconds
+    
+    // New combat properties from equipment
+    val totalArmorPiercing: Int
+        get() = getAllEquipment().sumOf { it.armorPiercing }
+    
+    val totalLifeSteal: Float
+        get() = getAllEquipment().sumOf { it.lifeSteal }
+    
+    val totalManaSteal: Float
+        get() = getAllEquipment().sumOf { it.manaSteal }
+    
+    val totalElementalDamage: Int
+        get() = getAllEquipment().sumOf { it.elementalDamage }
+    
+    // Helper function to get all equipped items of a specific set
+    fun getEquippedSetItems(setName: String): List<GearItem> {
+        return getAllEquipment().filter { it.setName == setName && it.setName.isNotEmpty() }
+    }
+    
+    // Check if player has complete set bonus
+    fun hasCompleteSet(setName: String, requiredPieces: Int): Boolean {
+        return getEquippedSetItems(setName).size >= requiredPieces
+    }
     
     // Add a status effect
     fun addStatusEffect(type: String, duration: Int, value: Int) {
@@ -154,6 +188,7 @@ data class Player(
         if (level <= 0) return 0
         return (level * level * 100).toLong() // Example: 100 * level^2
     }
+    
     // Get status effects description for UI
     fun getStatusEffectsDescription(): String {
         val descriptions = mutableListOf<String>()
@@ -167,11 +202,6 @@ data class Player(
         }
         
         return if (descriptions.isEmpty()) "None" else descriptions.joinToString(", ")
-    }
-    
-    // Helper method for experience calculation
-    fun getExperienceForLevel(level: Int): Long {
-        return (level.toDouble().pow(1.5) * 100).toLong()
     }
     
     // Check if player can attack based on attack speed

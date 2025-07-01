@@ -27,69 +27,7 @@ class GameEngine {
     private var playerLeveledUpCallback: ((Player) -> Unit)? = null
     private var combatLogCallback: ((String) -> Unit)? = null
 
-    val availableShopItems: List<GearItem> = listOf(
-        // WEAPONS
-        // Swords - normal attack speed and damage
-        GearItem("Rusty Sword", ItemType.WEAPON, attackBonus = 5, cost = 50, attackSpeedBonus = -100f, weaponType = WeaponType.SWORD, description = "A worn but reliable blade"),
-        GearItem("Iron Sword", ItemType.WEAPON, attackBonus = 12, cost = 200, attackSpeedBonus = -150f, critRateBonus = 2f, weaponType = WeaponType.SWORD, description = "A sturdy iron blade"),
-        GearItem("Steel Sword", ItemType.WEAPON, attackBonus = 18, cost = 500, attackSpeedBonus = -200f, critRateBonus = 5f, weaponType = WeaponType.SWORD, description = "A well-crafted steel sword"),
-        GearItem("Enchanted Blade", ItemType.WEAPON, attackBonus = 25, cost = 1200, attackSpeedBonus = -250f, critRateBonus = 8f, critDamageBonus = 0.2f, weaponType = WeaponType.SWORD, description = "A magically enhanced sword"),
-        GearItem("Dragonslayer Sword", ItemType.WEAPON, attackBonus = 35, cost = 2500, attackSpeedBonus = -300f, critRateBonus = 12f, critDamageBonus = 0.3f, weaponType = WeaponType.SWORD, description = "Forged to slay dragons"),
-        
-        // Daggers - fast attack speed and low damage
-        GearItem("Rusty Dagger", ItemType.WEAPON, attackBonus = 8, cost = 80, attackSpeedBonus = -400f, critRateBonus = 8f, weaponType = WeaponType.DAGGER, description = "Quick but weak"),
-        GearItem("Steel Dagger", ItemType.WEAPON, attackBonus = 12, cost = 300, attackSpeedBonus = -500f, critRateBonus = 15f, weaponType = WeaponType.DAGGER, description = "Swift and deadly"),
-        GearItem("Shadow Blade", ItemType.WEAPON, attackBonus = 16, cost = 800, attackSpeedBonus = -600f, critRateBonus = 20f, critDamageBonus = 0.4f, weaponType = WeaponType.DAGGER, description = "Strikes from the shadows"),
-        GearItem("Venom Fang", ItemType.WEAPON, attackBonus = 20, cost = 1500, attackSpeedBonus = -700f, critRateBonus = 25f, critDamageBonus = 0.5f, weaponType = WeaponType.DAGGER, description = "Drips with deadly poison"),
-        
-        // 2Handers - slow but high damage
-        GearItem("Iron Maul", ItemType.WEAPON, attackBonus = 22, cost = 400, attackSpeedBonus = 500f, critDamageBonus = 0.3f, weaponType = WeaponType.TWO_HANDED, description = "Crushes enemies with raw power"),
-        GearItem("Steel Greatsword", ItemType.WEAPON, attackBonus = 30, cost = 800, attackSpeedBonus = 400f, critDamageBonus = 0.4f, weaponType = WeaponType.TWO_HANDED, description = "Massive two-handed blade"),
-        GearItem("Warhammer of Might", ItemType.WEAPON, attackBonus = 40, cost = 1800, attackSpeedBonus = 600f, critDamageBonus = 0.6f, weaponType = WeaponType.TWO_HANDED, description = "Devastating crushing weapon"),
-        GearItem("Titan's Cleaver", ItemType.WEAPON, attackBonus = 55, cost = 3500, attackSpeedBonus = 800f, critDamageBonus = 0.8f, weaponType = WeaponType.TWO_HANDED, description = "Splits mountains in half"),
-
-        // ARMOR
-        // Light Armor - low defense, bonus to mana
-        GearItem("Cloth Robes", ItemType.ARMOR, defenseBonus = 2, cost = 40, manaBonus = 20, armorType = ArmorType.LIGHT, description = "Comfortable robes for spellcasters"),
-        GearItem("Leather Vest", ItemType.ARMOR, defenseBonus = 5, cost = 120, manaBonus = 15, dodgeBonus = 3f, armorType = ArmorType.LIGHT, description = "Light and flexible protection"),
-        GearItem("Studded Leather", ItemType.ARMOR, defenseBonus = 8, cost = 300, manaBonus = 25, dodgeBonus = 5f, armorType = ArmorType.LIGHT, description = "Reinforced leather armor"),
-        GearItem("Elven Cloak", ItemType.ARMOR, defenseBonus = 12, cost = 800, manaBonus = 40, dodgeBonus = 8f, armorType = ArmorType.LIGHT, description = "Mystical elven garment"),
-        
-        // Medium Armor - medium defense, more chance to dodge
-        GearItem("Chainmail Shirt", ItemType.ARMOR, defenseBonus = 10, cost = 250, dodgeBonus = 4f, armorType = ArmorType.MEDIUM, description = "Balanced protection and mobility"),
-        GearItem("Scale Mail", ItemType.ARMOR, defenseBonus = 15, cost = 600, dodgeBonus = 6f, armorType = ArmorType.MEDIUM, description = "Overlapping metal scales"),
-        GearItem("Brigandine Armor", ItemType.ARMOR, defenseBonus = 20, cost = 1200, dodgeBonus = 8f, armorType = ArmorType.MEDIUM, description = "Flexible metal plates"),
-        GearItem("Mithril Chainmail", ItemType.ARMOR, defenseBonus = 28, cost = 2500, dodgeBonus = 12f, armorType = ArmorType.MEDIUM, description = "Legendary lightweight metal"),
-        
-        // Heavy Armor - more hp, attack speed penalty
-        GearItem("Iron Plate", ItemType.ARMOR, defenseBonus = 18, cost = 500, hpBonus = 30, attackSpeedBonus = 200f, armorType = ArmorType.HEAVY, description = "Heavy but protective"),
-        GearItem("Steel Plate", ItemType.ARMOR, defenseBonus = 25, cost = 1000, hpBonus = 50, attackSpeedBonus = 300f, armorType = ArmorType.HEAVY, description = "Superior heavy armor"),
-        GearItem("Dragon Scale Mail", ItemType.ARMOR, defenseBonus = 35, cost = 2200, hpBonus = 80, attackSpeedBonus = 250f, armorType = ArmorType.HEAVY, description = "Crafted from dragon scales"),
-        GearItem("Adamantine Plate", ItemType.ARMOR, defenseBonus = 45, cost = 4000, hpBonus = 120, attackSpeedBonus = 400f, armorType = ArmorType.HEAVY, description = "Unbreakable metal armor"),
-
-        // SHIELDS
-        GearItem("Wooden Shield", ItemType.SHIELD, defenseBonus = 3, cost = 60, description = "Basic wooden protection"),
-        GearItem("Iron Shield", ItemType.SHIELD, defenseBonus = 6, cost = 180, dodgeBonus = 2f, description = "Sturdy iron shield"),
-        GearItem("Steel Shield", ItemType.SHIELD, defenseBonus = 10, cost = 400, dodgeBonus = 4f, description = "Well-crafted steel shield"),
-        GearItem("Tower Shield", ItemType.SHIELD, defenseBonus = 15, cost = 800, hpBonus = 25, description = "Massive protective shield"),
-        GearItem("Aegis of Valor", ItemType.SHIELD, defenseBonus = 20, cost = 1600, dodgeBonus = 8f, hpBonus = 40, description = "Legendary protective aegis"),
-
-        // AMULETS
-        GearItem("Copper Amulet", ItemType.AMULET, cost = 100, attackBonus = 3, description = "Simple copper charm"),
-        GearItem("Silver Pendant", ItemType.AMULET, cost = 300, manaBonus = 20, critRateBonus = 3f, description = "Mystical silver pendant"),
-        GearItem("Amulet of Strength", ItemType.AMULET, cost = 600, attackBonus = 8, critDamageBonus = 0.15f, description = "Enhances physical power"),
-        GearItem("Pendant of Vitality", ItemType.AMULET, cost = 800, hpBonus = 50, defenseBonus = 5, description = "Grants life force"),
-        GearItem("Arcane Medallion", ItemType.AMULET, cost = 1200, manaBonus = 60, critRateBonus = 8f, description = "Pulses with magical energy"),
-        GearItem("Heart of the Dragon", ItemType.AMULET, cost = 2500, attackBonus = 15, hpBonus = 80, critDamageBonus = 0.3f, description = "Contains a dragon's essence"),
-
-        // RINGS
-        GearItem("Copper Ring", ItemType.RING, cost = 80, hitBonus = 2f, description = "Simple copper band"),
-        GearItem("Ring of Agility", ItemType.RING, cost = 250, dodgeBonus = 4f, critRateBonus = 5f, description = "Increases nimbleness"),
-        GearItem("Ring of Power", ItemType.RING, cost = 500, attackBonus = 6, critDamageBonus = 0.1f, description = "Amplifies strength"),
-        GearItem("Ring of Protection", ItemType.RING, cost = 400, defenseBonus = 4, hpBonus = 25, description = "Provides magical protection"),
-        GearItem("Mana Crystal Ring", ItemType.RING, cost = 600, manaBonus = 30, critRateBonus = 6f, description = "Channels magical energy"),
-        GearItem("Master's Signet", ItemType.RING, cost = 1500, attackBonus = 10, defenseBonus = 6, hitBonus = 8f, description = "Ring of a legendary warrior")
-    )
+    val availableShopItems: List<GearItem> = ShopItems.allItems
 
     init {
         // Initialize with proper HP/Mana based on stats
@@ -481,22 +419,17 @@ class GameEngine {
         return false
     }
 
-    fun buyItem(itemToBuy: GearItem): String {
-        if (player.coins < itemToBuy.cost) {
-            return "Not enough coins to buy ${itemToBuy.name}."
-        }
 
-        player.coins -= itemToBuy.cost
-        player.inventory.add(itemToBuy.copy()) // Add a copy to inventory
-
-        combatLogCallback?.invoke("Bought ${itemToBuy.name}. Added to inventory.")
-        return "Successfully bought ${itemToBuy.name}."
-    }
 
     fun equipItem(itemToEquip: GearItem): String {
         val itemInInventory = player.inventory.find { it.name == itemToEquip.name && it.cost == itemToEquip.cost }
         if (itemInInventory == null) {
             return "Item not found in inventory."
+        }
+
+        // Check level requirement
+        if (player.level < itemToEquip.levelRequirement) {
+            return "Level ${itemToEquip.levelRequirement} required to equip ${itemToEquip.name}."
         }
 
         when (itemToEquip.type) {
@@ -539,6 +472,38 @@ class GameEngine {
                 player.equippedRing = itemInInventory.copy()
                 player.inventory.remove(itemInInventory)
                 combatLogCallback?.invoke("Equipped ${itemToEquip.name} as ring.")
+            }
+            ItemType.BELT -> {
+                player.equippedBelt?.let { oldBelt ->
+                    player.inventory.add(oldBelt) // Return old belt to inventory
+                }
+                player.equippedBelt = itemInInventory.copy()
+                player.inventory.remove(itemInInventory)
+                combatLogCallback?.invoke("Equipped ${itemToEquip.name} as belt.")
+            }
+            ItemType.GLOVES -> {
+                player.equippedGloves?.let { oldGloves ->
+                    player.inventory.add(oldGloves) // Return old gloves to inventory
+                }
+                player.equippedGloves = itemInInventory.copy()
+                player.inventory.remove(itemInInventory)
+                combatLogCallback?.invoke("Equipped ${itemToEquip.name} as gloves.")
+            }
+            ItemType.BOOTS -> {
+                player.equippedBoots?.let { oldBoots ->
+                    player.inventory.add(oldBoots) // Return old boots to inventory
+                }
+                player.equippedBoots = itemInInventory.copy()
+                player.inventory.remove(itemInInventory)
+                combatLogCallback?.invoke("Equipped ${itemToEquip.name} as boots.")
+            }
+            ItemType.CLOAK -> {
+                player.equippedCloak?.let { oldCloak ->
+                    player.inventory.add(oldCloak) // Return old cloak to inventory
+                }
+                player.equippedCloak = itemInInventory.copy()
+                player.inventory.remove(itemInInventory)
+                combatLogCallback?.invoke("Equipped ${itemToEquip.name} as cloak.")
             }
         }
 
@@ -587,6 +552,38 @@ class GameEngine {
                     return "Unequipped ${ring.name}."
                 }
             }
+            ItemType.BELT -> {
+                player.equippedBelt?.let { belt ->
+                    player.inventory.add(belt)
+                    player.equippedBelt = null
+                    combatLogCallback?.invoke("Unequipped ${belt.name}.")
+                    return "Unequipped ${belt.name}."
+                }
+            }
+            ItemType.GLOVES -> {
+                player.equippedGloves?.let { gloves ->
+                    player.inventory.add(gloves)
+                    player.equippedGloves = null
+                    combatLogCallback?.invoke("Unequipped ${gloves.name}.")
+                    return "Unequipped ${gloves.name}."
+                }
+            }
+            ItemType.BOOTS -> {
+                player.equippedBoots?.let { boots ->
+                    player.inventory.add(boots)
+                    player.equippedBoots = null
+                    combatLogCallback?.invoke("Unequipped ${boots.name}.")
+                    return "Unequipped ${boots.name}."
+                }
+            }
+            ItemType.CLOAK -> {
+                player.equippedCloak?.let { cloak ->
+                    player.inventory.add(cloak)
+                    player.equippedCloak = null
+                    combatLogCallback?.invoke("Unequipped ${cloak.name}.")
+                    return "Unequipped ${cloak.name}."
+                }
+            }
         }
         return "No item equipped in that slot."
     }
@@ -624,6 +621,22 @@ class GameEngine {
             player.equippedRing = null
             unequippedMessage = " ${itemInInventory.name} was unequipped."
         }
+        if (player.equippedBelt?.name == itemInInventory.name && player.equippedBelt?.cost == itemInInventory.cost) {
+            player.equippedBelt = null
+            unequippedMessage = " ${itemInInventory.name} was unequipped."
+        }
+        if (player.equippedGloves?.name == itemInInventory.name && player.equippedGloves?.cost == itemInInventory.cost) {
+            player.equippedGloves = null
+            unequippedMessage = " ${itemInInventory.name} was unequipped."
+        }
+        if (player.equippedBoots?.name == itemInInventory.name && player.equippedBoots?.cost == itemInInventory.cost) {
+            player.equippedBoots = null
+            unequippedMessage = " ${itemInInventory.name} was unequipped."
+        }
+        if (player.equippedCloak?.name == itemInInventory.name && player.equippedCloak?.cost == itemInInventory.cost) {
+            player.equippedCloak = null
+            unequippedMessage = " ${itemInInventory.name} was unequipped."
+        }
 
         combatLogCallback?.invoke("Sold ${itemInInventory.name} for $sellPrice coins.$unequippedMessage")
         return "Sold ${itemInInventory.name} for $sellPrice coins.$unequippedMessage"
@@ -644,6 +657,47 @@ class GameEngine {
 
     fun getArmorByType(armorType: ArmorType): List<GearItem> {
         return availableShopItems.filter { it.type == ItemType.ARMOR && it.armorType == armorType }
+    }
+    
+    // New categorization methods for expanded shop
+    fun getItemsByWeaponCategory(): Map<String, List<GearItem>> {
+        val weapons = availableShopItems.filter { it.type == ItemType.WEAPON }
+        return weapons.groupBy { it.getWeaponCategory() }
+    }
+    
+    fun getAccessoriesByType(accessoryType: AccessoryType): List<GearItem> {
+        return availableShopItems.filter { 
+            it.type in listOf(ItemType.RING, ItemType.AMULET, ItemType.BELT, ItemType.GLOVES, ItemType.BOOTS, ItemType.CLOAK) 
+            && it.accessoryType == accessoryType 
+        }
+    }
+    
+    fun getItemsByRarity(rarity: ItemRarity): List<GearItem> {
+        return availableShopItems.filter { it.rarity == rarity }
+    }
+    
+    fun getItemsForPlayerLevel(playerLevel: Int, levelRange: Int = 5): List<GearItem> {
+        return availableShopItems.filter { 
+            it.levelRequirement <= playerLevel && 
+            it.levelRequirement >= (playerLevel - levelRange).coerceAtLeast(1)
+        }
+    }
+    
+    fun buyItem(itemToBuy: GearItem): String {
+        // Check level requirement
+        if (player.level < itemToBuy.levelRequirement) {
+            return "Level ${itemToBuy.levelRequirement} required to buy ${itemToBuy.name}."
+        }
+        
+        if (player.coins < itemToBuy.cost) {
+            return "Not enough coins to buy ${itemToBuy.name}."
+        }
+
+        player.coins -= itemToBuy.cost
+        player.inventory.add(itemToBuy.copy()) // Add a copy to inventory
+
+        combatLogCallback?.invoke("Bought ${itemToBuy.name}. Added to inventory.")
+        return "Successfully bought ${itemToBuy.name}."
     }
     
     // Legacy methods for compatibility - now do nothing since we removed manual attack
