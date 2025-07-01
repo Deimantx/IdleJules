@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.widget.Spinner
 import android.widget.ArrayAdapter
+import android.widget.ProgressBar
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.idlerpg.R
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     // Player Info UI
     private lateinit var tvPlayerLevel: TextView
     private lateinit var tvPlayerExperience: TextView
+    private lateinit var progressBarExperience: ProgressBar
     private lateinit var tvPlayerHP: TextView
     private lateinit var tvPlayerMana: TextView
     private lateinit var tvPlayerAttack: TextView
@@ -39,6 +41,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnIncreaseIntelligence: Button
     private lateinit var btnIncreaseVitality: Button
     private lateinit var btnIncreaseSpirit: Button
+
+    // Enhanced Combat Stats UI
+    private lateinit var tvCritRate: TextView
+    private lateinit var tvCritDamage: TextView
+    private lateinit var tvDodgeChance: TextView
+    private lateinit var tvHitChance: TextView
+    private lateinit var tvAttackSpeed: TextView
 
     // Location Selection UI
     private lateinit var spinnerLocationSelect: Spinner
@@ -89,6 +98,7 @@ class MainActivity : AppCompatActivity() {
         // Player Info
         tvPlayerLevel = findViewById(R.id.tvPlayerLevel)
         tvPlayerExperience = findViewById(R.id.tvPlayerExperience)
+        progressBarExperience = findViewById(R.id.progressBarExperience)
         tvPlayerHP = findViewById(R.id.tvPlayerHP)
         tvPlayerMana = findViewById(R.id.tvPlayerMana)
         tvPlayerAttack = findViewById(R.id.tvPlayerAttack)
@@ -104,6 +114,13 @@ class MainActivity : AppCompatActivity() {
         btnIncreaseIntelligence = findViewById(R.id.btnIncreaseIntelligence)
         btnIncreaseVitality = findViewById(R.id.btnIncreaseVitality)
         btnIncreaseSpirit = findViewById(R.id.btnIncreaseSpirit)
+
+        // Enhanced Combat Stats
+        tvCritRate = findViewById(R.id.tvCritRate)
+        tvCritDamage = findViewById(R.id.tvCritDamage)
+        tvDodgeChance = findViewById(R.id.tvDodgeChance)
+        tvHitChance = findViewById(R.id.tvHitChance)
+        tvAttackSpeed = findViewById(R.id.tvAttackSpeed)
 
         // Location Selection
         spinnerLocationSelect = findViewById(R.id.spinnerLocationSelect)
@@ -144,7 +161,14 @@ class MainActivity : AppCompatActivity() {
                 // Display new stats
                 tvPlayerStats.text = "STR: ${it.strength} | AGI: ${it.agility} | INT: ${it.intelligence} | VIT: ${it.vitality} | SPR: ${it.spirit}"
                 
-                // Display combat stats
+                // Display enhanced combat stats individually
+                tvCritRate.text = "Crit Rate: ${"%.1f".format(it.critRate)}%"
+                tvCritDamage.text = "Crit Dmg: ${"%.1f".format(it.critDamageMultiplier * 100)}%"
+                tvDodgeChance.text = "Dodge: ${"%.1f".format(it.dodgeChance)}%"
+                tvHitChance.text = "Hit: ${"%.1f".format(it.hitChance)}%"
+                tvAttackSpeed.text = "Attack Speed: ${"%.1f".format(it.effectiveAttackSpeed / 1000f)}s"
+
+                // Keep the old combined display for backward compatibility (now hidden)
                 val combatStats = "Crit Rate: ${"%.1f".format(it.critRate)}% | " +
                         "Crit Dmg: ${"%.1f".format(it.critDamageMultiplier * 100)}% | " +
                         "Dodge: ${"%.1f".format(it.dodgeChance)}% | " +
@@ -167,6 +191,22 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.playerExperienceDisplay.observe(this) { experienceText ->
             tvPlayerExperience.text = "XP: $experienceText"
+            
+            // Update progress bar
+            viewModel.playerData.value?.let { player ->
+                val currentExp = player.experience
+                val expForCurrentLevel = player.getExperienceForLevel(player.level)
+                val expForNextLevel = player.getExperienceForLevel(player.level + 1)
+                val expInCurrentLevel = currentExp - expForCurrentLevel
+                val expNeededForNextLevel = expForNextLevel - expForCurrentLevel
+                
+                if (expNeededForNextLevel > 0) {
+                    val progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
+                    progressBarExperience.progress = progressPercentage
+                } else {
+                    progressBarExperience.progress = 100
+                }
+            }
         }
 
         viewModel.monsterData.observe(this) { monster ->

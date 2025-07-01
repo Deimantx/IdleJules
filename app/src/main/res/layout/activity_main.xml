@@ -17,45 +17,88 @@
             style="@style/SectionHeader"
             android:text="Player Info" />
 
-        <TextView
-            android:id="@+id/tvPlayerLevel"
-            style="@style/StatText"
-            android:text="Level: 1" />
+        <View style="@style/SectionDivider" />
 
-        <TextView
-            android:id="@+id/tvPlayerExperience"
-            style="@style/StatText"
-            android:text="XP: 0 / 100" />
+        <!-- Level and Experience with Progress Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="8dp">
 
-        <TextView
-            android:id="@+id/tvPlayerHP"
-            style="@style/StatText"
-            android:text="HP: 100 / 100" />
+            <TextView
+                android:id="@+id/tvPlayerLevel"
+                style="@style/MainStatText"
+                android:text="Level: 1" />
 
-        <TextView
-            android:id="@+id/tvPlayerMana"
-            style="@style/StatText"
-            android:text="Mana: 50 / 50" />
+            <TextView
+                android:id="@+id/tvPlayerExperience"
+                style="@style/StatText"
+                android:textSize="14sp"
+                android:layout_marginBottom="4dp"
+                android:text="XP: 0 / 100" />
 
-        <TextView
-            android:id="@+id/tvPlayerAttack"
-            style="@style/StatText"
-            android:text="Attack: 10" />
+            <ProgressBar
+                android:id="@+id/progressBarExperience"
+                style="@style/ProgressBarStyle"
+                android:max="100"
+                android:progress="0" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvPlayerDefense"
-            style="@style/StatText"
-            android:text="Defense: 5" />
+        <!-- Main Combat Stats Grid -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
 
-        <TextView
-            android:id="@+id/tvPlayerCoins"
-            style="@style/StatText"
-            android:text="Coins: 0" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="8dp">
 
-        <TextView
-            android:id="@+id/tvPlayerStatusEffects"
-            style="@style/StatText"
-            android:text="Status: None" />
+                <TextView
+                    android:id="@+id/tvPlayerHP"
+                    style="@style/MainStatText"
+                    android:text="HP: 100 / 100" />
+
+                <TextView
+                    android:id="@+id/tvPlayerAttack"
+                    style="@style/MainStatText"
+                    android:text="Attack: 10" />
+
+                <TextView
+                    android:id="@+id/tvPlayerCoins"
+                    style="@style/MainStatText"
+                    android:text="Coins: 0" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="8dp">
+
+                <TextView
+                    android:id="@+id/tvPlayerMana"
+                    style="@style/MainStatText"
+                    android:text="Mana: 50 / 50" />
+
+                <TextView
+                    android:id="@+id/tvPlayerDefense"
+                    style="@style/MainStatText"
+                    android:text="Defense: 5" />
+
+                <TextView
+                    android:id="@+id/tvPlayerStatusEffects"
+                    style="@style/StatText"
+                    android:textStyle="italic"
+                    android:text="Status: None" />
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- Player Stats Section -->
         <TextView
@@ -63,19 +106,100 @@
             android:layout_marginTop="16dp"
             android:text="Character Stats" />
 
-        <TextView
-            android:id="@+id/tvPlayerStats"
-            style="@style/StatText"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp"
-            android:text="STR: 5 | AGI: 5 | INT: 5 | VIT: 5 | SPR: 5" />
+        <View style="@style/SectionDivider" />
 
         <TextView
+            android:id="@+id/tvPlayerStats"
+            style="@style/CharacterStatText"
+            android:text="STR: 5 | AGI: 5 | INT: 5 | VIT: 5 | SPR: 5" />
+
+        <!-- Enhanced Combat Stats Display -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="8dp"
+            android:textSize="18sp"
+            android:text="Combat Stats" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/combat_stat_bg"
+            android:padding="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/tvCritRate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/stat_secondary"
+                    android:text="Crit Rate: 2.5%" />
+
+                <TextView
+                    android:id="@+id/tvCritDamage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/stat_secondary"
+                    android:text="Crit Dmg: 175%" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:id="@+id/tvDodgeChance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/stat_secondary"
+                    android:text="Dodge: 1.5%" />
+
+                <TextView
+                    android:id="@+id/tvHitChance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/stat_secondary"
+                    android:text="Hit: 87%" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvAttackSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/stat_secondary"
+                android:gravity="center"
+                android:text="Attack Speed: 2.0s" />
+        </LinearLayout>
+
+        <!-- Keep the old combined display for backward compatibility -->
+        <TextView
             android:id="@+id/tvPlayerCombatStats"
-            style="@style/StatText"
-            android:textSize="12sp"
-            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="Crit Rate: 2.5% | Crit Dmg: 175% | Dodge: 1.5% | Hit: 87% | Speed: 2.0s" />
 
         <!-- Skill Points Section -->
@@ -84,9 +208,13 @@
             android:layout_marginTop="16dp"
             android:text="Skill Points" />
 
+        <View style="@style/SectionDivider" />
+
         <TextView
             android:id="@+id/tvPlayerSkillPoints"
             style="@style/StatText"
+            android:textStyle="bold"
+            android:textSize="16sp"
             android:text="Available Skill Points: 0" />
 
         <LinearLayout
@@ -150,6 +278,8 @@
             android:layout_marginTop="16dp"
             android:text="Location Selection" />
 
+        <View style="@style/SectionDivider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -176,6 +306,8 @@
             android:layout_marginTop="16dp"
             android:text="Monster Selection" />
 
+        <View style="@style/SectionDivider" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -201,6 +333,8 @@
             style="@style/SectionHeader"
             android:layout_marginTop="16dp"
             android:text="Current Monster" />
+
+        <View style="@style/SectionDivider" />
 
         <TextView
             android:id="@+id/tvMonsterName"
@@ -232,6 +366,8 @@
             style="@style/SectionHeader"
             android:layout_marginTop="16dp"
             android:text="Combat Log" />
+
+        <View style="@style/SectionDivider" />
 
         <TextView
             android:id="@+id/tvCombatLog"

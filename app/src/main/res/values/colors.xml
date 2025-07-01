@@ -7,4 +7,14 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- UI Enhancement Colors -->
+    <color name="progress_bar_background">#FFE0E0E0</color>
+    <color name="progress_bar_primary">#FF4CAF50</color>
+    <color name="progress_bar_secondary">#FF2196F3</color>
+    <color name="stat_primary">#FF2C3E50</color>
+    <color name="stat_secondary">#FF34495E</color>
+    <color name="stat_accent">#FF3498DB</color>
+    <color name="combat_stat_bg">#FFF8F9FA</color>
+    <color name="section_divider">#FFBDC3C7</color>
 </resources>
