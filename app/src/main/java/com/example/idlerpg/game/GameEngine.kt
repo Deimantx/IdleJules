@@ -1,10 +1,12 @@
 package com.example.idlerpg.game
 
+import com.example.idlerpg.models.ArmorType
 import com.example.idlerpg.models.GearItem
 import com.example.idlerpg.models.ItemType
 import com.example.idlerpg.models.Monster
 import com.example.idlerpg.models.MonsterAbility
 import com.example.idlerpg.models.Player
+import com.example.idlerpg.models.WeaponType
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.random.Random
