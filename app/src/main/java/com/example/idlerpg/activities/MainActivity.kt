@@ -11,6 +11,7 @@ import android.widget.Toast
 import android.widget.Spinner
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.idlerpg.R
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     // Player Info UI
     private lateinit var tvPlayerLevel: TextView
     private lateinit var tvPlayerExperience: TextView
-    private lateinit var progressBarExperience: ProgressBar
+    private lateinit var progressBarExperience: View
     private lateinit var tvPlayerHP: TextView
     private lateinit var tvPlayerMana: TextView
     private lateinit var tvPlayerAttack: TextView
@@ -192,27 +193,52 @@ class MainActivity : AppCompatActivity() {
         viewModel.playerExperienceDisplay.observe(this) { experienceText ->
             tvPlayerExperience.text = "XP: $experienceText"
             
-            // Update progress bar with simple calculation
-            viewModel.playerData.value?.let { player ->
-                try {
-                    val currentExp = player.experience
-                    val expForCurrentLevel = player.getExperienceForLevel(player.level)
-                    val expForNextLevel = player.getExperienceForLevel(player.level + 1)
-                    val expInCurrentLevel = maxOf(0, currentExp - expForCurrentLevel)
-                    val expNeededForNextLevel = maxOf(1, expForNextLevel - expForCurrentLevel)
-                    
-                    val progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
-                    val clampedProgress = progressPercentage.coerceIn(0, 100)
-                    
-                    progressBarExperience.max = 100
-                    progressBarExperience.progress = clampedProgress
-                } catch (e: Exception) {
-                    // Fallback to simple calculation if experience system is different
-                    progressBarExperience.max = 100
-                    progressBarExperience.progress = 50 // Default to 50% if calculation fails
+            // Update custom progress bar - try to parse the experience text directly
+            try {
+                var progressPercentage = 75 // Default value
+                
+                // Parse experience text format like "3020 / 3162"
+                if (experienceText.contains(" / ")) {
+                    val parts = experienceText.split(" / ")
+                    if (parts.size == 2) {
+                        val current = parts[0].trim().toIntOrNull() ?: 0
+                        val total = parts[1].trim().toIntOrNull() ?: 1
+                        
+                        progressPercentage = ((current.toFloat() / total.toFloat()) * 100).toInt()
+                    } else {
+                        // Fallback calculation using player data
+                        viewModel.playerData.value?.let { player ->
+                            val currentExp = player.experience
+                            val expForCurrentLevel = player.getExperienceForLevel(player.level)
+                            val expForNextLevel = player.getExperienceForLevel(player.level + 1)
+                            val expInCurrentLevel = maxOf(0, currentExp - expForCurrentLevel)
+                            val expNeededForNextLevel = maxOf(1, expForNextLevel - expForCurrentLevel)
+                            
+                            progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
+                        }
+                    }
                 }
-            } ?: run {
-                progressBarExperience.progress = 0
+                
+                // Update the custom progress bar using layout weights
+                val clampedProgress = progressPercentage.coerceIn(0, 100)
+                val layoutParams = progressBarExperience.layoutParams as android.widget.LinearLayout.LayoutParams
+                layoutParams.weight = clampedProgress.toFloat()
+                progressBarExperience.layoutParams = layoutParams
+                
+                // Update the empty space weight
+                val parent = progressBarExperience.parent as android.widget.LinearLayout
+                if (parent.childCount > 1) {
+                    val emptyView = parent.getChildAt(1)
+                    val emptyParams = emptyView.layoutParams as android.widget.LinearLayout.LayoutParams
+                    emptyParams.weight = (100 - clampedProgress).toFloat()
+                    emptyView.layoutParams = emptyParams
+                }
+                
+            } catch (e: Exception) {
+                // Fallback - set to 75% visible
+                val layoutParams = progressBarExperience.layoutParams as android.widget.LinearLayout.LayoutParams
+                layoutParams.weight = 75f
+                progressBarExperience.layoutParams = layoutParams
             }
         }
 
