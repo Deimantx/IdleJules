@@ -26,18 +26,18 @@ class GameEngine {
 
     val availableShopItems: List<GearItem> = listOf(
         // Weapons with attack speed bonuses
-        GearItem("Wooden Sword", attackBonus = 5, cost = 50, attackSpeedBonus = -100f),
-        GearItem("Iron Sword", attackBonus = 10, cost = 200, attackSpeedBonus = -150f, critRateBonus = 2f),
-        GearItem("Steel Sword", attackBonus = 15, cost = 500, attackSpeedBonus = -200f, critRateBonus = 5f),
-        GearItem("Enchanted Blade", attackBonus = 20, cost = 1000, attackSpeedBonus = -300f, critRateBonus = 8f, critDamageBonus = 0.2f),
-        GearItem("Lightning Dagger", attackBonus = 12, cost = 800, attackSpeedBonus = -500f, critRateBonus = 15f),
-        
+        GearItem("Wooden Sword", ItemType.WEAPON, attackBonus = 5, cost = 50, attackSpeedBonus = -100f),
+        GearItem("Iron Sword", ItemType.WEAPON, attackBonus = 10, cost = 200, attackSpeedBonus = -150f, critRateBonus = 2f),
+        GearItem("Steel Sword", ItemType.WEAPON, attackBonus = 15, cost = 500, attackSpeedBonus = -200f, critRateBonus = 5f),
+        GearItem("Enchanted Blade", ItemType.WEAPON, attackBonus = 20, cost = 1000, attackSpeedBonus = -300f, critRateBonus = 8f, critDamageBonus = 0.2f),
+        GearItem("Lightning Dagger", ItemType.WEAPON, attackBonus = 12, cost = 800, attackSpeedBonus = -500f, critRateBonus = 15f),
+
         // Armor with defensive bonuses
-        GearItem("Leather Vest", defenseBonus = 3, cost = 40, dodgeBonus = 2f),
-        GearItem("Chainmail Armor", defenseBonus = 8, cost = 180, dodgeBonus = 1f),
-        GearItem("Plate Armor", defenseBonus = 12, cost = 450),
-        GearItem("Elven Cloak", defenseBonus = 5, cost = 600, dodgeBonus = 8f, hitBonus = 5f),
-        GearItem("Dragon Scale Mail", defenseBonus = 18, cost = 2000, dodgeBonus = 3f)
+        GearItem("Leather Vest", ItemType.ARMOR, defenseBonus = 3, cost = 40, dodgeBonus = 2f),
+        GearItem("Chainmail Armor", ItemType.ARMOR, defenseBonus = 8, cost = 180, dodgeBonus = 1f),
+        GearItem("Plate Armor", ItemType.ARMOR, defenseBonus = 12, cost = 450),
+        GearItem("Elven Cloak", ItemType.ARMOR, defenseBonus = 5, cost = 600, dodgeBonus = 8f, hitBonus = 5f),
+        GearItem("Dragon Scale Mail", ItemType.ARMOR, defenseBonus = 18, cost = 2000, dodgeBonus = 3f)
     )
 
     init {
@@ -450,6 +450,32 @@ class GameEngine {
         }
 
         return "Successfully bought ${itemToBuy.name}."
+    }
+
+    fun sellItem(itemToSell: GearItem, sellPricePercentage: Float = 0.5f): String {
+        val itemInInventory = player.inventory.find { it.name == itemToSell.name } // Basic find, assumes unique names for now or sells first found
+
+        if (itemInInventory == null) {
+            return "Cannot sell ${itemToSell.name}, item not found in inventory."
+        }
+
+        player.inventory.remove(itemInInventory)
+        val sellPrice = (itemInInventory.cost * sellPricePercentage).toInt()
+        player.coins += sellPrice
+
+        // Check if the sold item was equipped and unequip it
+        var unequippedMessage = ""
+        if (player.equippedWeapon?.name == itemInInventory.name && player.equippedWeapon?.cost == itemInInventory.cost) { // Compare by name and cost to be safer
+            player.equippedWeapon = null
+            unequippedMessage = " ${itemInInventory.name} was unequipped."
+        }
+        if (player.equippedArmor?.name == itemInInventory.name && player.equippedArmor?.cost == itemInInventory.cost) {
+            player.equippedArmor = null
+            unequippedMessage = " ${itemInInventory.name} was unequipped."
+        }
+
+        combatLogCallback?.invoke("Sold ${itemInInventory.name} for $sellPrice coins.$unequippedMessage")
+        return "Sold ${itemInInventory.name} for $sellPrice coins.$unequippedMessage"
     }
 
     fun getPlayerStats(): Player {

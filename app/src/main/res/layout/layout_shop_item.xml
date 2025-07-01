@@ -20,16 +20,81 @@
             android:textStyle="bold"
             android:text="Item Name" />
 
-        <TextView
-            android:id="@+id/tvItemStats"
+        <LinearLayout
+            android:id="@+id/llItemStatsContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="Stats: ATK+5, DEF+3" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvItemAttackBonus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="ATK: +10"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tvItemDefenseBonus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="DEF: +5"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tvItemAttackSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="Speed: -100ms"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tvItemCritRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="Crit Rate: +5%"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tvItemCritDamage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="Crit DMG: +10%"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tvItemDodge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="Dodge: +3%"
+                tools:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/tvItemHit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:visibility="gone"
+                tools:text="Hit: +2%"
+                tools:visibility="visible"/>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvItemCost"
             android:layout_width="wrap_content"
+            android:layout_marginTop="4dp"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textStyle="italic"
