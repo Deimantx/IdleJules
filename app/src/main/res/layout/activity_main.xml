@@ -47,6 +47,11 @@
             style="@style/StatText"
             android:text="Coins: 0" />
 
+        <TextView
+            android:id="@+id/tvPlayerStatusEffects"
+            style="@style/StatText"
+            android:text="Status: None" />
+
         <!-- Skill Points Section -->
         <TextView
             style="@style/SectionHeader"
@@ -109,6 +114,16 @@
             android:id="@+id/tvMonsterHP"
             style="@style/StatText"
             android:text="HP: 30" />
+
+        <TextView
+            android:id="@+id/tvMonsterType"
+            style="@style/StatText"
+            android:text="Type: Beast" />
+
+        <TextView
+            android:id="@+id/tvMonsterAbility"
+            style="@style/StatText"
+            android:text="Ability: None" />
 
         <!-- Combat Log Section -->
         <TextView
