@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.idlerpg.R
 import com.example.idlerpg.models.ItemType
+import com.example.idlerpg.models.GearItem
 import com.example.idlerpg.viewmodels.MainViewModel
 
 class ShopCategoryFragment : Fragment() {
@@ -81,7 +82,7 @@ class ShopCategoryFragment : Fragment() {
         }
     }
 
-    private fun handleCompareItem(selectedItem: com.example.idlerpg.models.GearItem) {
+    private fun handleCompareItem(selectedItem: GearItem) {
         val player = viewModel.playerData.value ?: return
         val equippedItem = when (selectedItem.type) {
             ItemType.WEAPON -> player.equippedWeapon

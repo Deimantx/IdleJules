@@ -2,6 +2,8 @@ package com.example.idlerpg.game
 
 import com.example.idlerpg.models.GearItem
 import com.example.idlerpg.models.ItemType
+import com.example.idlerpg.models.WeaponType
+import com.example.idlerpg.models.ArmorType
 import com.example.idlerpg.models.Monster
 import com.example.idlerpg.models.MonsterAbility
 import com.example.idlerpg.models.Player
@@ -411,7 +413,7 @@ class GameEngine {
         player.currentMana = player.maxMana
     }
 
-    fun calculateExperienceForNextLevel(level: Int): Long {
+    fun calculateExperienceForNextLevel(level: Int): kotlin.Long {
         return (level.toDouble().pow(1.5) * 100).toLong()
     }
 

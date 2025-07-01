@@ -216,8 +216,8 @@ class MainActivity : AppCompatActivity() {
                             val currentExp = player.experience
                             val expForCurrentLevel = player.getExperienceForLevel(player.level)
                             val expForNextLevel = player.getExperienceForLevel(player.level + 1)
-                            val expInCurrentLevel = maxOf(0, currentExp - expForCurrentLevel)
-                            val expNeededForNextLevel = maxOf(1, expForNextLevel - expForCurrentLevel)
+                            val expInCurrentLevel = kotlin.math.max(0L, currentExp - expForCurrentLevel)
+                            val expNeededForNextLevel = kotlin.math.max(1L, expForNextLevel - expForCurrentLevel)
                             
                             progressPercentage = ((expInCurrentLevel.toFloat() / expNeededForNextLevel.toFloat()) * 100).toInt()
                         }

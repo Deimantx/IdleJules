@@ -157,14 +157,14 @@ data class Player(
         }
         
         for (effect in statusEffects) {
-            descriptions.add("${effect.type.capitalize()} (${effect.duration} turns)")
+            descriptions.add("${effect.type.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }} (${effect.duration} turns)")
         }
         
         return if (descriptions.isEmpty()) "None" else descriptions.joinToString(", ")
     }
     
     // Helper method for experience calculation
-    fun getExperienceForLevel(level: Int): Long {
+    fun getExperienceForLevel(level: Int): kotlin.Long {
         return (level.toDouble().pow(1.5) * 100).toLong()
     }
     

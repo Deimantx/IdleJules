@@ -14,7 +14,7 @@ import com.example.idlerpg.viewmodels.MainViewModel
 class ShopSellFragment : Fragment() {
 
     private val viewModel: MainViewModel by activityViewModels()
-    private lateinit var playerInventoryAdapter: PlayerInventoryAdapter // To be created
+    private lateinit var inventoryAdapter: InventoryAdapter
     private lateinit var rvShopSellItems: RecyclerView
 
     override fun onCreateView(
@@ -33,16 +33,16 @@ class ShopSellFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        playerInventoryAdapter = PlayerInventoryAdapter(
+        inventoryAdapter = InventoryAdapter(
             emptyList(),
+            onEquipClicked = { item ->
+                viewModel.equipItem(item)
+            },
             onSellClicked = { item ->
                 viewModel.sellPlayerItem(item)
-            },
-            onCompareClicked = { item ->
-                handleCompareItem(item)
             }
         )
-        rvShopSellItems.adapter = playerInventoryAdapter
+        rvShopSellItems.adapter = inventoryAdapter
         rvShopSellItems.layoutManager = LinearLayoutManager(context)
     }
 
@@ -50,21 +50,12 @@ class ShopSellFragment : Fragment() {
         viewModel.playerData.observe(viewLifecycleOwner) { player ->
             player?.let {
                 // Update the adapter with the player's inventory
-                playerInventoryAdapter.updateItems(it.inventory)
+                inventoryAdapter.updateItems(it.inventory)
             }
         }
         // Player coins are observed by the parent ShopDialogFragment
         // Toast messages for sell confirmation are also handled by the parent
     }
 
-    private fun handleCompareItem(selectedItem: com.example.idlerpg.models.GearItem) {
-        val player = viewModel.playerData.value ?: return
-        val equippedItem = when (selectedItem.type) {
-            com.example.idlerpg.models.ItemType.WEAPON -> player.equippedWeapon
-            com.example.idlerpg.models.ItemType.ARMOR -> player.equippedArmor
-            else -> null // Should not happen for typical inventory items if they are equippable
-        }
-        val dialog = ItemComparisonDialogFragment.newInstance(selectedItem, equippedItem)
-        dialog.show(parentFragmentManager, ItemComparisonDialogFragment.TAG)
-    }
+
 }

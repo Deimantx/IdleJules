@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import com.example.idlerpg.R
 import com.example.idlerpg.models.ItemType
+import com.example.idlerpg.models.GearItem
 import com.example.idlerpg.viewmodels.MainViewModel
 
 class EquipmentDialogFragment : DialogFragment() {
@@ -132,7 +133,7 @@ class EquipmentDialogFragment : DialogFragment() {
         }
     }
 
-    private fun getItemStatsText(item: com.example.idlerpg.models.GearItem): String {
+    private fun getItemStatsText(item: GearItem): String {
         val stats = mutableListOf<String>()
         if (item.attackBonus > 0) stats.add("Atk: +${item.attackBonus}")
         if (item.defenseBonus > 0) stats.add("Def: +${item.defenseBonus}")
