@@ -158,6 +158,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _toastMessage.value = SingleEvent(message)
     }
 
+    fun equipItem(item: GearItem) {
+        val message = _gameEngine.equipItem(item)
+        _playerData.value = _gameEngine.getPlayerStats()
+        _toastMessage.value = SingleEvent(message)
+    }
+
+    fun unequipItem(itemType: com.example.idlerpg.models.ItemType) {
+        val message = _gameEngine.unequipItem(itemType)
+        _playerData.value = _gameEngine.getPlayerStats()
+        _toastMessage.value = SingleEvent(message)
+    }
+
     fun saveGame() {
         _repository.savePlayer(_gameEngine.player)
         _toastMessage.value = SingleEvent("Game Saved!")
