@@ -61,8 +61,12 @@ class ShopDialogFragment : DialogFragment() {
     private fun setupTabLayout() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
-                0 -> "Buy"
-                1 -> "Sell"
+                0 -> "Weapons"
+                1 -> "Armor"
+                2 -> "Shields"
+                3 -> "Amulets"
+                4 -> "Rings"
+                5 -> "Sell"
                 else -> null
             }
         }.attach()
