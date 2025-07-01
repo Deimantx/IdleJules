@@ -70,32 +70,52 @@
             android:layout_marginTop="8dp">
 
             <Button
-                android:id="@+id/btnIncreaseAttack"
+                android:id="@+id/btnIncreaseStrength"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:text="+ ATK" />
+                android:layout_marginEnd="2dp"
+                android:text="+ STR" />
 
             <Button
-                android:id="@+id/btnIncreaseDefense"
+                android:id="@+id/btnIncreaseAgility"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="+ DEF" />
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="+ AGI" />
 
             <Button
-                android:id="@+id/btnIncreaseMaxHp"
+                android:id="@+id/btnIncreaseIntelligence"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:text="+ HP" />
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="+ INT" />
+
+            <Button
+                android:id="@+id/btnIncreaseVitality"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="+ VIT" />
+
+            <Button
+                android:id="@+id/btnIncreaseMana"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:text="+ MANA" />
         </LinearLayout>
 
 
@@ -142,6 +162,17 @@
             android:text="Combat log starts here..."
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
+        <!-- Monster Selection Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Target Selection" />
+
+        <TextView
+            android:id="@+id/tvTargetInstructions"
+            style="@style/StatText"
+            android:text="Select a monster to fight from the Shop menu" />
+
         <!-- Action Buttons Section -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -151,17 +182,10 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/btnManualAttack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Manual Attack" />
-
-            <Button
                 android:id="@+id/btnShop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shop" /> <!-- Updated text -->
+                android:text="Shop & Monsters" />
         </LinearLayout>
 
     </LinearLayout>

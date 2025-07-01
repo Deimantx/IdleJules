@@ -67,10 +67,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun manualAttack() {
-        _gameEngine.fightTick()
+    fun selectMonster(monsterName: String) {
+        _gameEngine.selectMonster(monsterName)
         _playerData.value = _gameEngine.getPlayerStats()
         _monsterData.value = _gameEngine.currentMonster
+    }
+    
+    fun getAvailableMonsters(): List<Monster> {
+        return _gameEngine.getAvailableMonsters()
     }
 
     fun autoFightTick() {
@@ -85,27 +89,43 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _playerExperienceDisplay.postValue("${player.experience} / $expNeeded")
     }
 
-    fun spendSkillPointAttack() {
-        if (_gameEngine.spendSkillPointOnAttack()) {
+    fun spendSkillPointStrength() {
+        if (_gameEngine.spendSkillPointOnStrength()) {
             _playerData.value = _gameEngine.getPlayerStats()
         } else {
-            _toastMessage.value = SingleEvent("Failed to spend skill point on Attack (No points?).")
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Strength (No points?).")
         }
     }
 
-    fun spendSkillPointDefense() {
-        if (_gameEngine.spendSkillPointOnDefense()) {
+    fun spendSkillPointAgility() {
+        if (_gameEngine.spendSkillPointOnAgility()) {
             _playerData.value = _gameEngine.getPlayerStats()
         } else {
-             _toastMessage.value = SingleEvent("Failed to spend skill point on Defense (No points?).")
+             _toastMessage.value = SingleEvent("Failed to spend skill point on Agility (No points?).")
         }
     }
 
-    fun spendSkillPointMaxHp() {
-        if (_gameEngine.spendSkillPointOnMaxHp()) {
+    fun spendSkillPointIntelligence() {
+        if (_gameEngine.spendSkillPointOnIntelligence()) {
             _playerData.value = _gameEngine.getPlayerStats()
         } else {
-            _toastMessage.value = SingleEvent("Failed to spend skill point on Max HP (No points?).")
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Intelligence (No points?).")
+        }
+    }
+
+    fun spendSkillPointVitality() {
+        if (_gameEngine.spendSkillPointOnVitality()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Vitality (No points?).")
+        }
+    }
+
+    fun spendSkillPointMana() {
+        if (_gameEngine.spendSkillPointOnMana()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Mana (No points?).")
         }
     }
 

@@ -27,9 +27,11 @@ class MainActivity : AppCompatActivity() {
 
     // Skill Points UI
     private lateinit var tvPlayerSkillPoints: TextView
-    private lateinit var btnIncreaseAttack: Button
-    private lateinit var btnIncreaseDefense: Button
-    private lateinit var btnIncreaseMaxHp: Button
+    private lateinit var btnIncreaseStrength: Button
+    private lateinit var btnIncreaseAgility: Button
+    private lateinit var btnIncreaseIntelligence: Button
+    private lateinit var btnIncreaseVitality: Button
+    private lateinit var btnIncreaseMana: Button
 
     // Monster Info UI
     private lateinit var tvMonsterName: TextView
@@ -42,7 +44,6 @@ class MainActivity : AppCompatActivity() {
 
     // Other UI
     private lateinit var tvCombatLog: TextView
-    private lateinit var btnManualAttack: Button
     private lateinit var btnShop: Button
 
     private val gameLoopHandler = Handler(Looper.getMainLooper())
@@ -77,9 +78,11 @@ class MainActivity : AppCompatActivity() {
 
         // Skill Points
         tvPlayerSkillPoints = findViewById(R.id.tvPlayerSkillPoints)
-        btnIncreaseAttack = findViewById(R.id.btnIncreaseAttack)
-        btnIncreaseDefense = findViewById(R.id.btnIncreaseDefense)
-        btnIncreaseMaxHp = findViewById(R.id.btnIncreaseMaxHp)
+        btnIncreaseStrength = findViewById(R.id.btnIncreaseStrength)
+        btnIncreaseAgility = findViewById(R.id.btnIncreaseAgility)
+        btnIncreaseIntelligence = findViewById(R.id.btnIncreaseIntelligence)
+        btnIncreaseVitality = findViewById(R.id.btnIncreaseVitality)
+        btnIncreaseMana = findViewById(R.id.btnIncreaseMana)
 
         // Monster Info
         tvMonsterName = findViewById(R.id.tvMonsterName)
@@ -94,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         tvCombatLog = findViewById(R.id.tvCombatLog)
         tvCombatLog.movementMethod = ScrollingMovementMethod()
 
-        btnManualAttack = findViewById(R.id.btnManualAttack)
         btnShop = findViewById(R.id.btnShop)
     }
 
@@ -103,17 +105,18 @@ class MainActivity : AppCompatActivity() {
             player?.let {
                 tvPlayerLevel.text = "Level: ${it.level}"
                 tvPlayerHP.text = "HP: ${it.currentHp} / ${it.maxHp}"
-                // Use effectiveAttack and effectiveDefense from Player model
-                tvPlayerAttack.text = "Attack: ${it.effectiveAttack} (Base: ${it.attack})"
-                tvPlayerDefense.text = "Defense: ${it.effectiveDefense} (Base: ${it.defense})"
+                tvPlayerAttack.text = "STR: ${it.strength} | AGI: ${it.agility} | INT: ${it.intelligence}"
+                tvPlayerDefense.text = "VIT: ${it.vitality} | MANA: ${it.mana} | DEF: ${it.effectiveDefense}"
                 tvPlayerCoins.text = "Coins: ${it.coins}"
                 tvPlayerSkillPoints.text = "Available Skill Points: ${it.skillPoints}"
 
                 // Enable/disable skill point buttons
                 val hasSkillPoints = it.skillPoints > 0
-                btnIncreaseAttack.isEnabled = hasSkillPoints
-                btnIncreaseDefense.isEnabled = hasSkillPoints
-                btnIncreaseMaxHp.isEnabled = hasSkillPoints
+                btnIncreaseStrength.isEnabled = hasSkillPoints
+                btnIncreaseAgility.isEnabled = hasSkillPoints
+                btnIncreaseIntelligence.isEnabled = hasSkillPoints
+                btnIncreaseVitality.isEnabled = hasSkillPoints
+                btnIncreaseMana.isEnabled = hasSkillPoints
 
                 // Update status effects
                 tvPlayerStatusEffects.text = "Status: ${it.getStatusEffectsDescription()}"
@@ -158,22 +161,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtonClickListeners() {
-        btnManualAttack.setOnClickListener {
-            viewModel.manualAttack()
-        }
-
         btnShop.setOnClickListener {
             ShopDialogFragment().show(supportFragmentManager, ShopDialogFragment.TAG)
         }
 
-        btnIncreaseAttack.setOnClickListener {
-            viewModel.spendSkillPointAttack()
+        btnIncreaseStrength.setOnClickListener {
+            viewModel.spendSkillPointStrength()
         }
-        btnIncreaseDefense.setOnClickListener {
-            viewModel.spendSkillPointDefense()
+        btnIncreaseAgility.setOnClickListener {
+            viewModel.spendSkillPointAgility()
         }
-        btnIncreaseMaxHp.setOnClickListener {
-            viewModel.spendSkillPointMaxHp()
+        btnIncreaseIntelligence.setOnClickListener {
+            viewModel.spendSkillPointIntelligence()
+        }
+        btnIncreaseVitality.setOnClickListener {
+            viewModel.spendSkillPointVitality()
+        }
+        btnIncreaseMana.setOnClickListener {
+            viewModel.spendSkillPointMana()
         }
     }
 

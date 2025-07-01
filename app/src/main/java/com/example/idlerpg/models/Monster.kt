@@ -31,12 +31,14 @@ data class Monster(
     val maxHp: Int = hp,
     val attack: Int,
     val defense: Int,
+    val attackSpeed: Long, // Attack speed in milliseconds
     val experienceReward: Int,
     val coinReward: Int,
     val ability: MonsterAbility = MonsterAbility.NONE,
     val abilityPower: Int = 0, // Strength of the ability (healing amount, damage bonus, etc.)
     val abilityCooldown: Int = 0, // Turns between ability use (0 = every turn)
     var currentCooldown: Int = 0, // Current cooldown counter
+    var lastAttackTime: Long = 0L, // Last attack timestamp
     val description: String = "",
     val level: Int = 1
 ) {
@@ -51,6 +53,17 @@ data class Monster(
     // Reduce cooldown each turn
     fun tickCooldown() {
         if (currentCooldown > 0) currentCooldown--
+    }
+    
+    // Check if monster can attack (based on attack speed)
+    fun canAttack(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        return currentTime - lastAttackTime >= attackSpeed
+    }
+    
+    // Mark that monster attacked
+    fun performAttack() {
+        lastAttackTime = System.currentTimeMillis()
     }
     
     // Get ability description for UI
