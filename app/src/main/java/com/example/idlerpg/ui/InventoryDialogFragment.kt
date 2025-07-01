@@ -20,6 +20,7 @@ class InventoryDialogFragment : DialogFragment() {
     private val viewModel: MainViewModel by activityViewModels()
     private lateinit var tvPlayerCoinsInventory: TextView
     private lateinit var rvInventoryItems: RecyclerView
+    private lateinit var tvEmptyInventory: TextView
     private lateinit var inventoryAdapter: InventoryAdapter
 
     companion object {
@@ -38,6 +39,7 @@ class InventoryDialogFragment : DialogFragment() {
 
         tvPlayerCoinsInventory = view.findViewById(R.id.tvPlayerCoinsInventory)
         rvInventoryItems = view.findViewById(R.id.rvInventoryItems)
+        tvEmptyInventory = view.findViewById(R.id.tvEmptyInventory)
         val btnCloseInventory: Button = view.findViewById(R.id.btnCloseInventory)
 
         setupRecyclerView()
@@ -49,24 +51,49 @@ class InventoryDialogFragment : DialogFragment() {
     }
 
     private fun setupRecyclerView() {
-        inventoryAdapter = InventoryAdapter(
-            emptyList(),
-            onEquipClicked = { item ->
-                viewModel.equipItem(item)
-            },
-            onSellClicked = { item ->
-                viewModel.sellPlayerItem(item)
-            }
-        )
-        rvInventoryItems.adapter = inventoryAdapter
-        rvInventoryItems.layoutManager = LinearLayoutManager(context)
+        try {
+            inventoryAdapter = InventoryAdapter(
+                emptyList(),
+                onEquipClicked = { item ->
+                    try {
+                        viewModel.equipItem(item)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Error equipping item: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                },
+                onSellClicked = { item ->
+                    try {
+                        viewModel.sellPlayerItem(item)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Error selling item: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            )
+            rvInventoryItems.adapter = inventoryAdapter
+            rvInventoryItems.layoutManager = LinearLayoutManager(context)
+        } catch (e: Exception) {
+            Toast.makeText(context, "Error setting up inventory: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun setupObservers() {
         viewModel.playerData.observe(viewLifecycleOwner) { player ->
             player?.let {
                 tvPlayerCoinsInventory.text = "Your Coins: ${it.coins}"
-                inventoryAdapter.updateItems(it.inventory)
+                
+                // Handle empty inventory state
+                if (it.inventory.isEmpty()) {
+                    rvInventoryItems.visibility = View.GONE
+                    tvEmptyInventory.visibility = View.VISIBLE
+                } else {
+                    rvInventoryItems.visibility = View.VISIBLE
+                    tvEmptyInventory.visibility = View.GONE
+                    try {
+                        inventoryAdapter.updateItems(it.inventory)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "Error updating inventory: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
 

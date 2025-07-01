@@ -15,4 +15,31 @@
     <color name="combat_stat_bg">#FFF8F9FA</color>
     <color name="section_divider">#FFBDC3C7</color>
     <color name="gold_color">#FFD4AF37</color>
+    
+    <!-- RPG Theme Colors -->
+    <color name="rpg_background">#FF1A1A2E</color>
+    <color name="rpg_surface">#FF16213E</color>
+    <color name="rpg_card">#FF0F3460</color>
+    <color name="rpg_primary">#FF533483</color>
+    <color name="rpg_accent">#FFE94560</color>
+    <color name="rpg_gold">#FFFFD700</color>
+    <color name="rpg_silver">#FFC0C0C0</color>
+    <color name="rpg_text_primary">#FFFFFFFF</color>
+    <color name="rpg_text_secondary">#FFCCCCCC</color>
+    <color name="rpg_text_muted">#FF999999</color>
+    
+    <!-- Item Quality Colors -->
+    <color name="item_common">#FF9D9D9D</color>
+    <color name="item_uncommon">#FF1EFF00</color>
+    <color name="item_rare">#FF0070DD</color>
+    <color name="item_epic">#FFA335EE</color>
+    <color name="item_legendary">#FFFF8000</color>
+    
+    <!-- Button Colors -->
+    <color name="button_buy">#FF27AE60</color>
+    <color name="button_buy_pressed">#FF229954</color>
+    <color name="button_sell">#FFE74C3C</color>
+    <color name="button_sell_pressed">#FFD32F2F</color>
+    <color name="button_equip">#FF3498DB</color>
+    <color name="button_equip_pressed">#FF2980B9</color>
 </resources>

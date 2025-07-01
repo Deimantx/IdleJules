@@ -4,45 +4,85 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="20dp"
+    android:background="@color/rpg_surface"
     tools:context=".ui.ShopDialogFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Adventurer's Shop"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="vertical"
+        android:background="@color/rpg_card"
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:elevation="4dp">
 
-    <TextView
-        android:id="@+id/tvPlayerCoinsShop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your Coins: 0"
-        android:textSize="16sp"
-        android:layout_gravity="end"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚔️ Adventurer's Shop ⚔️"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/rpg_text_primary"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"/>
 
+        <TextView
+            android:id="@+id/tvPlayerCoinsShop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Coins: 0"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/rpg_gold"
+            android:layout_gravity="center_horizontal"
+            android:drawableStart="@android:drawable/btn_star_big_on"
+            android:drawablePadding="8dp"/>
+
+    </LinearLayout>
+
+    <!-- Tab Section -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/shopTabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="@color/rpg_card"
+        android:elevation="2dp"
+        android:layout_marginBottom="8dp"/>
 
+    <!-- Content Section -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/shopViewPager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:minHeight="250dp"/>
+        android:minHeight="350dp"
+        android:background="@color/rpg_background"
+        android:padding="8dp"/>
 
-    <Button
-        android:id="@+id/btnCloseShop"
-        android:layout_width="wrap_content"
+    <!-- Footer Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Close"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"/>
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="@color/rpg_card"
+        android:padding="12dp"
+        android:layout_marginTop="16dp"
+        android:elevation="2dp">
+
+        <Button
+            android:id="@+id/btnCloseShop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="✕ Close Shop"
+            android:textColor="@color/rpg_text_primary"
+            android:backgroundTint="@color/rpg_accent"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:minWidth="120dp"/>
+
+    </LinearLayout>
 
 </LinearLayout>
