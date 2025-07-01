@@ -34,6 +34,11 @@ class MainActivity : AppCompatActivity() {
     // Monster Info UI
     private lateinit var tvMonsterName: TextView
     private lateinit var tvMonsterHP: TextView
+    private lateinit var tvMonsterType: TextView
+    private lateinit var tvMonsterAbility: TextView
+
+    // Player Status UI
+    private lateinit var tvPlayerStatusEffects: TextView
 
     // Other UI
     private lateinit var tvCombatLog: TextView
@@ -79,6 +84,11 @@ class MainActivity : AppCompatActivity() {
         // Monster Info
         tvMonsterName = findViewById(R.id.tvMonsterName)
         tvMonsterHP = findViewById(R.id.tvMonsterHP)
+        tvMonsterType = findViewById(R.id.tvMonsterType)
+        tvMonsterAbility = findViewById(R.id.tvMonsterAbility)
+
+        // Player Status
+        tvPlayerStatusEffects = findViewById(R.id.tvPlayerStatusEffects)
 
         // Other
         tvCombatLog = findViewById(R.id.tvCombatLog)
@@ -104,6 +114,9 @@ class MainActivity : AppCompatActivity() {
                 btnIncreaseAttack.isEnabled = hasSkillPoints
                 btnIncreaseDefense.isEnabled = hasSkillPoints
                 btnIncreaseMaxHp.isEnabled = hasSkillPoints
+
+                // Update status effects
+                tvPlayerStatusEffects.text = "Status: ${it.getStatusEffectsDescription()}"
             }
         }
 
@@ -114,10 +127,19 @@ class MainActivity : AppCompatActivity() {
         viewModel.monsterData.observe(this) { monster ->
             monster?.let {
                 tvMonsterName.text = "Monster: ${it.name}"
-                tvMonsterHP.text = "HP: ${it.hp}"
+                tvMonsterHP.text = "HP: ${it.hp} / ${it.maxHp}"
+                tvMonsterType.text = "Type: ${it.type.name.lowercase().replaceFirstChar { char -> char.uppercase() }}"
+                val abilityText = if (it.ability.name != "NONE") {
+                    it.getAbilityDescription()
+                } else {
+                    "None"
+                }
+                tvMonsterAbility.text = "Ability: $abilityText"
             } ?: run {
                 tvMonsterName.text = "Monster: None"
                 tvMonsterHP.text = "HP: -"
+                tvMonsterType.text = "Type: -"
+                tvMonsterAbility.text = "Ability: -"
             }
         }
 
