@@ -7,33 +7,78 @@ import kotlin.random.Random
 
 object MonsterFactory {
     
-    // Base monster templates - these will be scaled based on player level
+    // Base monster templates - now with fixed balanced stats for different difficulty levels
     private val monsterTemplates = listOf(
+        // Level 1-3 monsters (Easy)
         MonsterTemplate(
             name = "Forest Wolf",
             type = MonsterType.BEAST,
-            baseHp = 35,
+            baseHp = 25,
             baseAttack = 8,
-            baseDefense = 3,
+            baseDefense = 2,
             baseExp = 15,
             baseCoins = 8,
             ability = MonsterAbility.CRITICAL_STRIKE,
-            abilityPower = 25, // 25% crit chance
+            abilityPower = 20, // 20% crit chance
             abilityCooldown = 0,
-            description = "A fierce wolf with sharp fangs and keen hunting instincts."
+            description = "A fierce wolf with sharp fangs and keen hunting instincts.",
+            level = 2,
+            attackSpeed = 1800f, // Fast attacker
+            critRate = 15f,
+            dodgeChance = 8f
         ),
+        MonsterTemplate(
+            name = "Goblin Scout",
+            type = MonsterType.HUMANOID,
+            baseHp = 20,
+            baseAttack = 6,
+            baseDefense = 1,
+            baseExp = 12,
+            baseCoins = 6,
+            ability = MonsterAbility.NONE,
+            abilityPower = 0,
+            abilityCooldown = 0,
+            description = "A small, quick goblin armed with crude weapons.",
+            level = 1,
+            attackSpeed = 1500f, // Very fast
+            critRate = 5f,
+            dodgeChance = 12f
+        ),
+        MonsterTemplate(
+            name = "Giant Rat",
+            type = MonsterType.BEAST,
+            baseHp = 18,
+            baseAttack = 5,
+            baseDefense = 0,
+            baseExp = 10,
+            baseCoins = 4,
+            ability = MonsterAbility.NONE,
+            abilityPower = 0,
+            abilityCooldown = 0,
+            description = "A large rat with disease-ridden fangs.",
+            level = 1,
+            attackSpeed = 1200f, // Very fast but weak
+            critRate = 3f,
+            dodgeChance = 15f
+        ),
+        
+        // Level 4-6 monsters (Medium)
         MonsterTemplate(
             name = "Skeleton Warrior",
             type = MonsterType.UNDEAD,
-            baseHp = 40,
+            baseHp = 35,
             baseAttack = 12,
-            baseDefense = 6,
-            baseExp = 20,
-            baseCoins = 12,
+            baseDefense = 5,
+            baseExp = 25,
+            baseCoins = 15,
             ability = MonsterAbility.ARMOR_PIERCE,
             abilityPower = 3, // Ignores 3 defense
             abilityCooldown = 0,
-            description = "An undead warrior wielding ancient weapons."
+            description = "An undead warrior wielding ancient weapons.",
+            level = 4,
+            attackSpeed = 2200f, // Medium speed
+            critRate = 8f,
+            dodgeChance = 3f
         ),
         MonsterTemplate(
             name = "Fire Elemental",
@@ -41,103 +86,141 @@ object MonsterFactory {
             baseHp = 30,
             baseAttack = 15,
             baseDefense = 2,
-            baseExp = 25,
-            baseCoins = 15,
+            baseExp = 30,
+            baseCoins = 18,
             ability = MonsterAbility.POISON_ATTACK,
-            abilityPower = 5, // 5 burn damage per turn
+            abilityPower = 4, // 4 burn damage per turn
             abilityCooldown = 0,
-            description = "A blazing creature of pure fire that burns everything it touches."
+            description = "A blazing creature of pure fire that burns everything it touches.",
+            level = 5,
+            attackSpeed = 2000f, // Medium speed
+            critRate = 12f,
+            dodgeChance = 5f
         ),
         MonsterTemplate(
-            name = "Goblin Shaman",
+            name = "Orc Warrior",
             type = MonsterType.HUMANOID,
-            baseHp = 25,
-            baseAttack = 6,
-            baseDefense = 4,
-            baseExp = 18,
-            baseCoins = 10,
-            ability = MonsterAbility.MAGIC_SHIELD,
-            abilityPower = 2, // Reduces damage by 2
+            baseHp = 45,
+            baseAttack = 14,
+            baseDefense = 6,
+            baseExp = 28,
+            baseCoins = 16,
+            ability = MonsterAbility.BERSERKER_RAGE,
+            abilityPower = 6, // +6 attack when below 50% HP
             abilityCooldown = 0,
-            description = "A cunning goblin that weaves protective magic spells."
+            description = "A brutal orc warrior with massive strength.",
+            level = 5,
+            attackSpeed = 2400f, // Slower but strong
+            critRate = 10f,
+            dodgeChance = 2f
         ),
+        
+        // Level 7-10 monsters (Hard)
         MonsterTemplate(
             name = "Troll Berserker",
             type = MonsterType.HUMANOID,
-            baseHp = 60,
-            baseAttack = 10,
-            baseDefense = 5,
-            baseExp = 30,
-            baseCoins = 18,
+            baseHp = 70,
+            baseAttack = 18,
+            baseDefense = 8,
+            baseExp = 40,
+            baseCoins = 25,
             ability = MonsterAbility.BERSERKER_RAGE,
-            abilityPower = 8, // +8 attack when below 50% HP
+            abilityPower = 10, // +10 attack when below 50% HP
             abilityCooldown = 0,
-            description = "A massive troll that becomes more dangerous when wounded."
+            description = "A massive troll that becomes more dangerous when wounded.",
+            level = 8,
+            attackSpeed = 3000f, // Slow but devastating
+            critRate = 15f,
+            dodgeChance = 1f
         ),
         MonsterTemplate(
             name = "Vampire Bat",
             type = MonsterType.UNDEAD,
-            baseHp = 20,
-            baseAttack = 7,
+            baseHp = 25,
+            baseAttack = 10,
             baseDefense = 1,
-            baseExp = 12,
-            baseCoins = 6,
+            baseExp = 20,
+            baseCoins = 12,
             ability = MonsterAbility.LIFE_STEAL,
-            abilityPower = 30, // Steals 30% of damage as health
+            abilityPower = 40, // Steals 40% of damage as health
             abilityCooldown = 0,
-            description = "A bloodthirsty creature that feeds on life force."
+            description = "A bloodthirsty creature that feeds on life force.",
+            level = 6,
+            attackSpeed = 1600f, // Fast
+            critRate = 20f,
+            dodgeChance = 18f
         ),
         MonsterTemplate(
             name = "Stone Golem",
             type = MonsterType.CONSTRUCT,
-            baseHp = 80,
-            baseAttack = 14,
-            baseDefense = 12,
-            baseExp = 35,
-            baseCoins = 25,
+            baseHp = 90,
+            baseAttack = 20,
+            baseDefense = 15,
+            baseExp = 50,
+            baseCoins = 35,
             ability = MonsterAbility.STUN_CHANCE,
-            abilityPower = 20, // 20% chance to stun
+            abilityPower = 25, // 25% chance to stun
             abilityCooldown = 3,
-            description = "An ancient construct of living stone with crushing blows."
-        ),
-        MonsterTemplate(
-            name = "Thornling",
-            type = MonsterType.PLANT,
-            baseHp = 45,
-            baseAttack = 9,
-            baseDefense = 7,
-            baseExp = 22,
-            baseCoins = 14,
-            ability = MonsterAbility.REGENERATION,
-            abilityPower = 3, // Heals 3 HP per turn
-            abilityCooldown = 0,
-            description = "A plant creature covered in poisonous thorns that heals over time."
+            description = "An ancient construct of living stone with crushing blows.",
+            level = 9,
+            attackSpeed = 3500f, // Very slow but extremely powerful
+            critRate = 5f,
+            dodgeChance = 0f
         ),
         MonsterTemplate(
             name = "Shadow Demon",
             type = MonsterType.DEMON,
-            baseHp = 35,
-            baseAttack = 13,
+            baseHp = 40,
+            baseAttack = 16,
             baseDefense = 4,
-            baseExp = 28,
-            baseCoins = 20,
+            baseExp = 35,
+            baseCoins = 22,
             ability = MonsterAbility.DOUBLE_ATTACK,
             abilityPower = 0,
             abilityCooldown = 3, // Attacks twice every 3 turns
-            description = "A dark entity from the shadow realm with lightning-fast strikes."
+            description = "A dark entity from the shadow realm with lightning-fast strikes.",
+            level = 7,
+            attackSpeed = 1400f, // Very fast
+            critRate = 25f,
+            dodgeChance = 12f
         ),
+        
+        // Level 10+ monsters (Very Hard)
         MonsterTemplate(
             name = "Young Dragon",
             type = MonsterType.DRAGON,
-            baseHp = 100,
-            baseAttack = 18,
-            baseDefense = 10,
-            baseExp = 50,
-            baseCoins = 35,
+            baseHp = 120,
+            baseAttack = 25,
+            baseDefense = 12,
+            baseExp = 80,
+            baseCoins = 50,
             ability = MonsterAbility.CRITICAL_STRIKE,
-            abilityPower = 40, // 40% crit chance
+            abilityPower = 35, // 35% crit chance
             abilityCooldown = 0,
-            description = "A juvenile dragon with devastating breath attacks and razor-sharp claws."
+            description = "A juvenile dragon with devastating breath attacks and razor-sharp claws.",
+            level = 12,
+            attackSpeed = 2800f, // Slow but extremely powerful
+            critRate = 35f,
+            critDamage = 2.5f,
+            dodgeChance = 3f
+        ),
+        MonsterTemplate(
+            name = "Ancient Lich",
+            type = MonsterType.UNDEAD,
+            baseHp = 80,
+            baseAttack = 22,
+            baseDefense = 10,
+            baseExp = 70,
+            baseCoins = 45,
+            ability = MonsterAbility.MAGIC_SHIELD,
+            abilityPower = 5, // Reduces damage by 5
+            abilityCooldown = 0,
+            description = "A powerful undead sorcerer with ancient magic.",
+            level = 11,
+            attackSpeed = 2600f, // Medium-slow
+            critRate = 20f,
+            critDamage = 2.2f,
+            dodgeChance = 8f
         )
     )
     
@@ -153,87 +236,79 @@ object MonsterFactory {
         val ability: MonsterAbility,
         val abilityPower: Int,
         val abilityCooldown: Int,
-        val description: String
+        val description: String,
+        val level: Int,
+        val attackSpeed: Float,
+        val critRate: Float,
+        val critDamage: Float = 1.8f,
+        val dodgeChance: Float
     )
     
     /**
-     * Creates a random monster appropriate for the given player level
+     * Creates a monster by name without level scaling
      */
-    fun createRandomMonster(playerLevel: Int): Monster {
-        // Filter monsters based on player level for appropriate difficulty
-        val availableTemplates = when (playerLevel) {
-            1, 2 -> monsterTemplates.filter { it.baseHp <= 40 } // Easier monsters
-            3, 4, 5 -> monsterTemplates.filter { it.baseHp <= 60 } // Medium monsters
-            6, 7, 8 -> monsterTemplates.filter { it.baseHp <= 80 } // Harder monsters
-            else -> monsterTemplates // All monsters available
-        }
-        
-        val template = availableTemplates.random()
-        return createMonsterFromTemplate(template, playerLevel)
-    }
-    
-    /**
-     * Creates a specific monster by name, scaled to player level
-     */
-    fun createMonsterByName(name: String, playerLevel: Int): Monster? {
+    fun createMonsterByName(name: String): Monster? {
         val template = monsterTemplates.find { it.name == name } ?: return null
-        return createMonsterFromTemplate(template, playerLevel)
+        return createMonsterFromTemplate(template)
     }
     
     /**
-     * Gets all available monster names
+     * Gets all available monster names sorted by level
      */
     fun getAllMonsterNames(): List<String> {
-        return monsterTemplates.map { it.name }
+        return monsterTemplates.sortedBy { it.level }.map { it.name }
     }
     
     /**
-     * Creates a monster from a template, scaling stats based on player level
+     * Gets monsters filtered by level range
      */
-    private fun createMonsterFromTemplate(template: MonsterTemplate, playerLevel: Int): Monster {
-        // Scale factor based on player level (with some randomness)
-        val scaleFactor = 1.0 + (playerLevel - 1) * 0.3 + Random.nextDouble(-0.1, 0.1)
-        
-        // Calculate scaled stats
-        val scaledHp = (template.baseHp * scaleFactor).toInt().coerceAtLeast(1)
-        val scaledAttack = (template.baseAttack * scaleFactor).toInt().coerceAtLeast(1)
-        val scaledDefense = (template.baseDefense * scaleFactor).toInt().coerceAtLeast(0)
-        val scaledExp = (template.baseExp * scaleFactor).toInt().coerceAtLeast(1)
-        val scaledCoins = (template.baseCoins * scaleFactor).toInt().coerceAtLeast(1)
-        
-        // Scale ability power for some abilities
-        val scaledAbilityPower = when (template.ability) {
-            MonsterAbility.REGENERATION,
-            MonsterAbility.POISON_ATTACK,
-            MonsterAbility.ARMOR_PIERCE,
-            MonsterAbility.MAGIC_SHIELD,
-            MonsterAbility.BERSERKER_RAGE -> (template.abilityPower * scaleFactor).toInt().coerceAtLeast(1)
-            else -> template.abilityPower // Percentage-based abilities don't scale
-        }
-        
+    fun getMonstersForLevelRange(minLevel: Int, maxLevel: Int): List<String> {
+        return monsterTemplates
+            .filter { it.level in minLevel..maxLevel }
+            .sortedBy { it.level }
+            .map { it.name }
+    }
+    
+    /**
+     * Gets monster level by name
+     */
+    fun getMonsterLevel(name: String): Int {
+        return monsterTemplates.find { it.name == name }?.level ?: 1
+    }
+    
+    /**
+     * Creates a monster from a template without level scaling
+     */
+    private fun createMonsterFromTemplate(template: MonsterTemplate): Monster {
         return Monster(
             name = template.name,
             type = template.type,
-            hp = scaledHp,
-            maxHp = scaledHp,
-            attack = scaledAttack,
-            defense = scaledDefense,
-            experienceReward = scaledExp,
-            coinReward = scaledCoins,
+            hp = template.baseHp,
+            maxHp = template.baseHp,
+            attack = template.baseAttack,
+            defense = template.baseDefense,
+            experienceReward = template.baseExp,
+            coinReward = template.baseCoins,
             ability = template.ability,
-            abilityPower = scaledAbilityPower,
+            abilityPower = template.abilityPower,
             abilityCooldown = template.abilityCooldown,
             currentCooldown = 0,
             description = template.description,
-            level = playerLevel
+            level = template.level,
+            attackSpeed = template.attackSpeed,
+            lastAttackTime = 0L,
+            critRate = template.critRate,
+            critDamage = template.critDamage,
+            dodgeChance = template.dodgeChance,
+            hitChance = 90f
         )
     }
     
     /**
-     * Creates a boss version of a random monster (enhanced stats and abilities)
+     * Creates a boss version of a monster (enhanced stats and abilities)
      */
-    fun createBossMonster(playerLevel: Int): Monster {
-        val baseMonster = createRandomMonster(playerLevel)
+    fun createBossMonster(monsterName: String): Monster? {
+        val baseMonster = createMonsterByName(monsterName) ?: return null
         
         return baseMonster.copy(
             name = "Elite ${baseMonster.name}",
@@ -244,7 +319,16 @@ object MonsterFactory {
             experienceReward = (baseMonster.experienceReward * 2).toInt(),
             coinReward = (baseMonster.coinReward * 2).toInt(),
             abilityPower = (baseMonster.abilityPower * 1.2).toInt(),
-            description = "An elite version of ${baseMonster.name} with enhanced abilities."
+            description = "An elite version of ${baseMonster.name} with enhanced abilities.",
+            attackSpeed = baseMonster.attackSpeed * 0.8f, // 20% faster
+            critRate = baseMonster.critRate * 1.5f,
+            critDamage = baseMonster.critDamage + 0.3f
         )
+    }
+    
+    // Legacy method for compatibility - now returns first monster
+    @Deprecated("Use createMonsterByName instead")
+    fun createRandomMonster(playerLevel: Int): Monster {
+        return createMonsterFromTemplate(monsterTemplates.first())
     }
 }

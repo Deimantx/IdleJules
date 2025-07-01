@@ -42,7 +42,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         loadGame()
-        _playerData.value = _gameEngine.getPlayerStats() // player.copy() effectively
+        _playerData.value = _gameEngine.getPlayerStats()
         _monsterData.value = _gameEngine.currentMonster
         _shopItems.value = _gameEngine.availableShopItems
         updateExperienceDisplay()
@@ -53,7 +53,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             updateExperienceDisplay()
         }
         _gameEngine.setOnPlayerLeveledUp { player ->
-            _playerData.postValue(player) // player here is the direct reference from gameEngine
+            _playerData.postValue(player)
             updateExperienceDisplay()
         }
         _gameEngine.setOnCombatLog { message ->
@@ -67,16 +67,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun manualAttack() {
-        _gameEngine.fightTick()
-        _playerData.value = _gameEngine.getPlayerStats()
-        _monsterData.value = _gameEngine.currentMonster
-    }
-
-    fun autoFightTick() {
-        _gameEngine.fightTick()
+    // New combat tick system
+    fun combatTick() {
+        _gameEngine.combatTick()
         _playerData.postValue(_gameEngine.getPlayerStats())
         _monsterData.postValue(_gameEngine.currentMonster)
+    }
+
+    // Monster selection methods
+    fun selectMonster(monsterName: String) {
+        _gameEngine.selectMonster(monsterName)
+        _monsterData.postValue(_gameEngine.currentMonster)
+    }
+
+    fun getAvailableMonsters(): List<String> {
+        return _gameEngine.getAvailableMonsters()
+    }
+
+    fun getMonstersForPlayerLevel(): List<String> {
+        return _gameEngine.getMonstersForPlayerLevel()
     }
 
     private fun updateExperienceDisplay() {
@@ -85,57 +94,100 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _playerExperienceDisplay.postValue("${player.experience} / $expNeeded")
     }
 
-    fun spendSkillPointAttack() {
-        if (_gameEngine.spendSkillPointOnAttack()) {
+    // New stat system skill point methods
+    fun spendSkillPointStrength() {
+        if (_gameEngine.spendSkillPointOnStrength()) {
             _playerData.value = _gameEngine.getPlayerStats()
         } else {
-            _toastMessage.value = SingleEvent("Failed to spend skill point on Attack (No points?).")
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Strength (No points?).")
         }
     }
 
-    fun spendSkillPointDefense() {
-        if (_gameEngine.spendSkillPointOnDefense()) {
+    fun spendSkillPointAgility() {
+        if (_gameEngine.spendSkillPointOnAgility()) {
             _playerData.value = _gameEngine.getPlayerStats()
         } else {
-             _toastMessage.value = SingleEvent("Failed to spend skill point on Defense (No points?).")
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Agility (No points?).")
         }
     }
 
-    fun spendSkillPointMaxHp() {
-        if (_gameEngine.spendSkillPointOnMaxHp()) {
+    fun spendSkillPointIntelligence() {
+        if (_gameEngine.spendSkillPointOnIntelligence()) {
             _playerData.value = _gameEngine.getPlayerStats()
         } else {
-            _toastMessage.value = SingleEvent("Failed to spend skill point on Max HP (No points?).")
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Intelligence (No points?).")
+        }
+    }
+
+    fun spendSkillPointVitality() {
+        if (_gameEngine.spendSkillPointOnVitality()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Vitality (No points?).")
+        }
+    }
+
+    fun spendSkillPointSpirit() {
+        if (_gameEngine.spendSkillPointOnSpirit()) {
+            _playerData.value = _gameEngine.getPlayerStats()
+        } else {
+            _toastMessage.value = SingleEvent("Failed to spend skill point on Spirit (No points?).")
         }
     }
 
     fun buyShopItem(item: GearItem) {
         val message = _gameEngine.buyItem(item)
-        _playerData.value = _gameEngine.getPlayerStats() // Update player data (coins, equipped items)
+        _playerData.value = _gameEngine.getPlayerStats()
         _toastMessage.value = SingleEvent(message)
     }
 
     fun saveGame() {
         _repository.savePlayer(_gameEngine.player)
-        // Avoid direct manipulation of combatLog here if it's purely for game events
-        // _combatLog.value?.add(0, "Game Saved!") // This could be a toast or a separate status
-         _toastMessage.value = SingleEvent("Game Saved!")
+        _toastMessage.value = SingleEvent("Game Saved!")
     }
 
     private fun loadGame() {
         val loadedPlayer = _repository.loadPlayer()
         if (loadedPlayer != null) {
             _gameEngine.player = loadedPlayer
-             _combatLog.value?.add(0,"Game Loaded!") // Keep this log as it's part of game state
+            _combatLog.value?.add(0,"Game Loaded!")
         } else {
-             _combatLog.value?.add(0,"No saved game found. Starting new game.")
+            _combatLog.value?.add(0,"No saved game found. Starting new game.")
         }
-        _gameEngine.player.currentHp = _gameEngine.player.currentHp.coerceAtMost(_gameEngine.player.maxHp)
+        // Update effective stats after loading
+        _gameEngine.player.currentHp = _gameEngine.player.currentHp.coerceAtMost(_gameEngine.player.effectiveMaxHp)
+        _gameEngine.player.currentMana = _gameEngine.player.currentMana.coerceAtMost(_gameEngine.player.effectiveMaxMana)
     }
 
     override fun onCleared() {
         super.onCleared()
         saveGame()
+    }
+
+    // Legacy methods for compatibility - marked as deprecated
+    @Deprecated("Manual attacks have been removed - combat is now automatic")
+    fun manualAttack() {
+        // Do nothing - manual attacks are removed
+    }
+
+    @Deprecated("Auto fight is now handled by combatTick")
+    fun autoFightTick() {
+        combatTick()
+    }
+
+    @Deprecated("Use spendSkillPointStrength instead")
+    fun spendSkillPointAttack() {
+        spendSkillPointStrength()
+    }
+
+    @Deprecated("Defense is now equipment-based, use spendSkillPointVitality for health")
+    fun spendSkillPointDefense() {
+        spendSkillPointVitality()
+    }
+
+    @Deprecated("Use spendSkillPointVitality instead")
+    fun spendSkillPointMaxHp() {
+        spendSkillPointVitality()
     }
 }
 

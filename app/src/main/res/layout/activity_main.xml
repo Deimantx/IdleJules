@@ -33,6 +33,11 @@
             android:text="HP: 100 / 100" />
 
         <TextView
+            android:id="@+id/tvPlayerMana"
+            style="@style/StatText"
+            android:text="Mana: 50 / 50" />
+
+        <TextView
             android:id="@+id/tvPlayerAttack"
             style="@style/StatText"
             android:text="Attack: 10" />
@@ -52,6 +57,23 @@
             style="@style/StatText"
             android:text="Status: None" />
 
+        <!-- Player Stats Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Character Stats" />
+
+        <TextView
+            android:id="@+id/tvPlayerStats"
+            style="@style/StatText"
+            android:text="STR: 5 | AGI: 5 | INT: 5 | VIT: 5 | SPR: 5" />
+
+        <TextView
+            android:id="@+id/tvPlayerCombatStats"
+            style="@style/StatText"
+            android:textSize="12sp"
+            android:text="Crit Rate: 2.5% | Crit Dmg: 175% | Dodge: 1.5% | Hit: 87% | Speed: 2.0s" />
+
         <!-- Skill Points Section -->
         <TextView
             style="@style/SectionHeader"
@@ -70,60 +92,110 @@
             android:layout_marginTop="8dp">
 
             <Button
-                android:id="@+id/btnIncreaseAttack"
+                android:id="@+id/btnIncreaseStrength"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="4dp"
-                android:text="+ ATK" />
+                android:layout_marginEnd="2dp"
+                android:text="+ STR" />
 
             <Button
-                android:id="@+id/btnIncreaseDefense"
+                android:id="@+id/btnIncreaseAgility"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:text="+ DEF" />
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="+ AGI" />
 
             <Button
-                android:id="@+id/btnIncreaseMaxHp"
+                android:id="@+id/btnIncreaseIntelligence"
                 style="@style/Widget.AppCompat.Button.Small"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginStart="4dp"
-                android:text="+ HP" />
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="+ INT" />
+
+            <Button
+                android:id="@+id/btnIncreaseVitality"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:text="+ VIT" />
+
+            <Button
+                android:id="@+id/btnIncreaseSpirit"
+                style="@style/Widget.AppCompat.Button.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="2dp"
+                android:text="+ SPR" />
         </LinearLayout>
 
+        <!-- Monster Selection Section -->
+        <TextView
+            style="@style/SectionHeader"
+            android:layout_marginTop="16dp"
+            android:text="Monster Selection" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <Spinner
+                android:id="@+id/spinnerMonsterSelect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnSelectMonster"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fight!" />
+        </LinearLayout>
 
         <!-- Monster Info Section -->
         <TextView
             style="@style/SectionHeader"
             android:layout_marginTop="16dp"
-            android:text="Monster Info" />
+            android:text="Current Monster" />
 
         <TextView
             android:id="@+id/tvMonsterName"
             style="@style/StatText"
-            android:text="Monster: Slime" />
+            android:text="Monster: None Selected" />
+
+        <TextView
+            android:id="@+id/tvMonsterLevel"
+            style="@style/StatText"
+            android:text="Level: -" />
 
         <TextView
             android:id="@+id/tvMonsterHP"
             style="@style/StatText"
-            android:text="HP: 30" />
+            android:text="HP: -" />
 
         <TextView
             android:id="@+id/tvMonsterType"
             style="@style/StatText"
-            android:text="Type: Beast" />
+            android:text="Type: -" />
 
         <TextView
             android:id="@+id/tvMonsterAbility"
             style="@style/StatText"
-            android:text="Ability: None" />
+            android:text="Ability: -" />
 
         <!-- Combat Log Section -->
         <TextView
@@ -134,12 +206,12 @@
         <TextView
             android:id="@+id/tvCombatLog"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:layout_marginTop="8dp"
             android:background="#f0f0f0"
             android:padding="8dp"
             android:scrollbars="vertical"
-            android:text="Combat log starts here..."
+            android:text="Select a monster to begin combat..."
             android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         <!-- Action Buttons Section -->
@@ -151,17 +223,10 @@
             android:gravity="center">
 
             <Button
-                android:id="@+id/btnManualAttack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="Manual Attack" />
-
-            <Button
                 android:id="@+id/btnShop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shop" /> <!-- Updated text -->
+                android:text="Shop" />
         </LinearLayout>
 
     </LinearLayout>

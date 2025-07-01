@@ -11,22 +11,31 @@ import kotlin.random.Random
 class GameEngine {
     var player: Player = Player() // Initialize with a default player
     var currentMonster: Monster? = null
+    var selectedMonsterName: String? = null
 
     private var monsterDefeatedCallback: ((Monster) -> Unit)? = null
     private var playerLeveledUpCallback: ((Player) -> Unit)? = null
     private var combatLogCallback: ((String) -> Unit)? = null
 
     val availableShopItems: List<GearItem> = listOf(
-        GearItem("Wooden Sword", attackBonus = 5, cost = 50),
-        GearItem("Leather Vest", defenseBonus = 3, cost = 40),
-        GearItem("Iron Sword", attackBonus = 10, cost = 200),
-        GearItem("Chainmail Armor", defenseBonus = 8, cost = 180),
-        GearItem("Steel Sword", attackBonus = 15, cost = 500),
-        GearItem("Plate Armor", defenseBonus = 12, cost = 450)
+        // Weapons with attack speed bonuses
+        GearItem("Wooden Sword", attackBonus = 5, cost = 50, attackSpeedBonus = -100f),
+        GearItem("Iron Sword", attackBonus = 10, cost = 200, attackSpeedBonus = -150f, critRateBonus = 2f),
+        GearItem("Steel Sword", attackBonus = 15, cost = 500, attackSpeedBonus = -200f, critRateBonus = 5f),
+        GearItem("Enchanted Blade", attackBonus = 20, cost = 1000, attackSpeedBonus = -300f, critRateBonus = 8f, critDamageBonus = 0.2f),
+        GearItem("Lightning Dagger", attackBonus = 12, cost = 800, attackSpeedBonus = -500f, critRateBonus = 15f),
+        
+        // Armor with defensive bonuses
+        GearItem("Leather Vest", defenseBonus = 3, cost = 40, dodgeBonus = 2f),
+        GearItem("Chainmail Armor", defenseBonus = 8, cost = 180, dodgeBonus = 1f),
+        GearItem("Plate Armor", defenseBonus = 12, cost = 450),
+        GearItem("Elven Cloak", defenseBonus = 5, cost = 600, dodgeBonus = 8f, hitBonus = 5f),
+        GearItem("Dragon Scale Mail", defenseBonus = 18, cost = 2000, dodgeBonus = 3f)
     )
 
     init {
-        spawnNewMonster()
+        // Initialize with proper HP/Mana based on stats
+        updatePlayerEffectiveStats()
     }
 
     fun setOnMonsterDefeated(callback: (Monster) -> Unit) {
@@ -40,61 +49,114 @@ class GameEngine {
     fun setOnCombatLog(callback: (String) -> Unit) {
         combatLogCallback = callback
     }
+    
+    fun selectMonster(monsterName: String) {
+        selectedMonsterName = monsterName
+        spawnSelectedMonster()
+    }
+    
+    fun getAvailableMonsters(): List<String> {
+        return MonsterFactory.getAllMonsterNames()
+    }
+    
+    fun getMonstersForPlayerLevel(): List<String> {
+        // Suggest monsters within reasonable level range of player
+        val minLevel = (player.level - 2).coerceAtLeast(1)
+        val maxLevel = player.level + 3
+        return MonsterFactory.getMonstersForLevelRange(minLevel, maxLevel)
+    }
 
-    private fun spawnNewMonster() {
-        currentMonster = MonsterFactory.createRandomMonster(player.level)
+    private fun spawnSelectedMonster() {
+        val monsterName = selectedMonsterName ?: run {
+            combatLogCallback?.invoke("No monster selected!")
+            return
+        }
+        
+        currentMonster = MonsterFactory.createMonsterByName(monsterName)
         currentMonster?.let { monster ->
-            combatLogCallback?.invoke("A wild ${monster.name} appears!")
+            combatLogCallback?.invoke("A wild ${monster.name} (Level ${monster.level}) appears!")
             if (monster.ability != MonsterAbility.NONE) {
                 combatLogCallback?.invoke("${monster.name}: ${monster.getAbilityDescription()}")
             }
         }
     }
 
-    fun fightTick() {
+    // Main combat tick - now handles attack speed timing
+    fun combatTick() {
         val monster = currentMonster ?: return
-
+        val currentTime = System.currentTimeMillis()
+        
         // Process player status effects first
         val statusMessages = player.processStatusEffects()
         statusMessages.forEach { combatLogCallback?.invoke(it) }
 
-        // Check if player is stunned (skip their turn)
-        if (!player.isStunned) {
-            // Player attacks monster
-            val playerDamage = calculatePlayerDamage(monster)
-            monster.hp -= playerDamage
-            combatLogCallback?.invoke("Player attacks ${monster.name} for $playerDamage damage. ${monster.name} HP: ${monster.hp}")
-
-            if (monster.hp <= 0) {
-                combatLogCallback?.invoke("${monster.name} defeated!")
-                player.experience += monster.experienceReward.toLong()
-                player.coins += monster.coinReward
-                monsterDefeatedCallback?.invoke(monster)
-                checkPlayerLevelUp()
-                spawnNewMonster()
-                return
-            }
-        } else {
-            combatLogCallback?.invoke("Player is stunned and cannot attack!")
+        // Check if player died from status effects
+        if (player.currentHp <= 0) {
+            handlePlayerDeath()
+            return
         }
 
-        // Monster attacks player (with abilities)
-        performMonsterAttack(monster)
+        // Player auto-attack based on attack speed
+        if (!player.isStunned && player.canAttack(currentTime)) {
+            performPlayerAttack(monster)
+            player.updateAttackTime(currentTime)
+            
+            if (monster.hp <= 0) {
+                handleMonsterDefeat(monster)
+                return
+            }
+        }
+
+        // Monster attack based on attack speed
+        if (monster.canAttack(currentTime)) {
+            performMonsterAttack(monster)
+            monster.updateAttackTime(currentTime)
+        }
 
         // Tick monster cooldowns
         monster.tickCooldown()
 
         if (player.currentHp <= 0) {
-            combatLogCallback?.invoke("Player has been defeated! Game Over (for now).")
-            player.currentHp = player.maxHp // Simple reset
-            player.statusEffects.clear() // Clear all status effects on death
-            player.isStunned = false
+            handlePlayerDeath()
         }
+    }
+    
+    private fun performPlayerAttack(monster: Monster) {
+        // Calculate hit chance
+        val playerHitChance = player.hitChance + (player.equippedWeapon?.hitBonus ?: 0f)
+        val monsterDodgeChance = monster.dodgeChance
+        
+        val hitRoll = Random.nextFloat() * 100f
+        val effectiveHitChance = playerHitChance - monsterDodgeChance
+        
+        if (hitRoll > effectiveHitChance) {
+            combatLogCallback?.invoke("Player's attack misses ${monster.name}!")
+            return
+        }
+        
+        // Calculate damage
+        var damage = calculatePlayerDamage(monster)
+        
+        // Check for critical hit
+        val playerCritRate = player.critRate + (player.equippedWeapon?.critRateBonus ?: 0f)
+        val critRoll = Random.nextFloat() * 100f
+        
+        val isCritical = critRoll < playerCritRate
+        if (isCritical) {
+            val critMultiplier = player.critDamageMultiplier + (player.equippedWeapon?.critDamageBonus ?: 0f)
+            damage = (damage * critMultiplier).toInt()
+            combatLogCallback?.invoke("CRITICAL HIT! Player deals $damage damage to ${monster.name}!")
+        } else {
+            combatLogCallback?.invoke("Player attacks ${monster.name} for $damage damage.")
+        }
+        
+        monster.hp -= damage
+        combatLogCallback?.invoke("${monster.name} HP: ${monster.hp}/${monster.maxHp}")
     }
 
     private fun calculatePlayerDamage(monster: Monster): Int {
         val baseDamage = max(0, player.effectiveAttack - monster.defense)
-        return baseDamage
+        return baseDamage.coerceAtLeast(1) // Minimum 1 damage
     }
 
     private fun performMonsterAttack(monster: Monster) {
@@ -109,15 +171,33 @@ class GameEngine {
     }
 
     private fun performBasicMonsterAttack(monster: Monster) {
+        // Calculate hit chance
+        val monsterHitChance = monster.hitChance
+        val playerDodgeChance = player.dodgeChance + (player.equippedArmor?.dodgeBonus ?: 0f)
+        
+        val hitRoll = Random.nextFloat() * 100f
+        val effectiveHitChance = monsterHitChance - playerDodgeChance
+        
+        if (hitRoll > effectiveHitChance) {
+            combatLogCallback?.invoke("${monster.name}'s attack misses!")
+            return
+        }
+        
         var damage = calculateMonsterDamage(monster)
         
-        // Apply magic shield if monster has it
-        if (monster.ability == MonsterAbility.MAGIC_SHIELD) {
-            // This is handled in damage calculation
+        // Check for monster critical hit
+        val critRoll = Random.nextFloat() * 100f
+        val isCritical = critRoll < monster.critRate
+        
+        if (isCritical) {
+            damage = (damage * monster.critDamage).toInt()
+            combatLogCallback?.invoke("${monster.name} lands a CRITICAL HIT for $damage damage!")
+        } else {
+            combatLogCallback?.invoke("${monster.name} attacks for $damage damage.")
         }
-
+        
         player.currentHp -= damage
-        combatLogCallback?.invoke("${monster.name} attacks Player for $damage damage. Player HP: ${player.currentHp}")
+        combatLogCallback?.invoke("Player HP: ${player.currentHp}/${player.effectiveMaxHp}")
     }
 
     private fun performMonsterAbility(monster: Monster) {
@@ -197,11 +277,32 @@ class GameEngine {
         
         // Apply magic shield reduction
         if (monster.ability == MonsterAbility.MAGIC_SHIELD) {
-            // Note: This is for monsters that have magic shield, not the player
-            // If we want player magic shield, we'd implement it differently
+            damage = max(0, damage - monster.abilityPower)
         }
         
-        return damage
+        return damage.coerceAtLeast(1) // Minimum 1 damage
+    }
+    
+    private fun handleMonsterDefeat(monster: Monster) {
+        combatLogCallback?.invoke("${monster.name} defeated!")
+        player.experience += monster.experienceReward.toLong()
+        player.coins += monster.coinReward
+        monsterDefeatedCallback?.invoke(monster)
+        checkPlayerLevelUp()
+        
+        // Clear current monster - player must select a new one
+        currentMonster = null
+        combatLogCallback?.invoke("Select a new monster to fight!")
+    }
+    
+    private fun handlePlayerDeath() {
+        combatLogCallback?.invoke("Player has been defeated! Respawning...")
+        player.currentHp = player.effectiveMaxHp
+        player.currentMana = player.effectiveMaxMana
+        player.statusEffects.clear()
+        player.isStunned = false
+        // Clear current monster
+        currentMonster = null
     }
 
     private fun checkPlayerLevelUp() {
@@ -209,56 +310,90 @@ class GameEngine {
         if (player.experience >= experienceNeeded) {
             player.level++
             player.experience -= experienceNeeded
-            val skillPointsGained = 1 // Award 1 skill point per level
+            val skillPointsGained = 5 // Award 5 skill points per level for new stat system
             player.skillPoints += skillPointsGained
 
-            player.maxHp += 10 + (player.level * 2)
-            player.currentHp = player.maxHp
-            player.attack += 1 // Base stat increase is smaller now, skill points are for customization
-            player.defense += 1
+            // Update effective stats
+            updatePlayerEffectiveStats()
 
             combatLogCallback?.invoke("Player leveled up to Level ${player.level}! Gained $skillPointsGained skill point(s).")
             playerLeveledUpCallback?.invoke(player)
             checkPlayerLevelUp()
         }
     }
+    
+    private fun updatePlayerEffectiveStats() {
+        player.maxHp = player.effectiveMaxHp
+        player.currentHp = player.maxHp
+        player.maxMana = player.effectiveMaxMana
+        player.currentMana = player.maxMana
+    }
 
     fun calculateExperienceForNextLevel(level: Int): Long {
         return (level.toDouble().pow(1.5) * 100).toLong()
     }
 
-    fun spendSkillPointOnAttack(): Boolean {
+    // New stat-based skill point spending
+    fun spendSkillPointOnStrength(): Boolean {
         if (player.skillPoints > 0) {
             player.skillPoints--
-            player.attack++
-            combatLogCallback?.invoke("Spent 1 skill point on Attack. Base Attack: ${player.attack}")
+            player.strength++
+            combatLogCallback?.invoke("Spent 1 skill point on Strength. STR: ${player.strength} (+2 Attack, +5% Crit Damage)")
             return true
         }
-        combatLogCallback?.invoke("Not enough skill points to increase Attack.")
+        combatLogCallback?.invoke("Not enough skill points to increase Strength.")
         return false
     }
 
-    fun spendSkillPointOnDefense(): Boolean {
+    fun spendSkillPointOnAgility(): Boolean {
         if (player.skillPoints > 0) {
             player.skillPoints--
-            player.defense++
-            combatLogCallback?.invoke("Spent 1 skill point on Defense. Base Defense: ${player.defense}")
+            player.agility++
+            combatLogCallback?.invoke("Spent 1 skill point on Agility. AGI: ${player.agility} (+0.5% Crit Rate, +0.3% Dodge, +0.4% Hit, -50ms Attack Speed)")
             return true
         }
-        combatLogCallback?.invoke("Not enough skill points to increase Defense.")
+        combatLogCallback?.invoke("Not enough skill points to increase Agility.")
         return false
     }
 
-    fun spendSkillPointOnMaxHp(): Boolean {
+    fun spendSkillPointOnIntelligence(): Boolean {
         if (player.skillPoints > 0) {
             player.skillPoints--
-            val hpIncrease = 10 // Or some other scaling
-            player.maxHp += hpIncrease
-            player.currentHp += hpIncrease // Also increase current HP
-            combatLogCallback?.invoke("Spent 1 skill point on Max HP. Max HP: ${player.maxHp}")
+            player.intelligence++
+            player.maxMana = player.effectiveMaxMana
+            player.currentMana = player.maxMana
+            combatLogCallback?.invoke("Spent 1 skill point on Intelligence. INT: ${player.intelligence} (+5 Mana)")
             return true
         }
-        combatLogCallback?.invoke("Not enough skill points to increase Max HP.")
+        combatLogCallback?.invoke("Not enough skill points to increase Intelligence.")
+        return false
+    }
+
+    fun spendSkillPointOnVitality(): Boolean {
+        if (player.skillPoints > 0) {
+            player.skillPoints--
+            player.vitality++
+            val oldMaxHp = player.maxHp
+            player.maxHp = player.effectiveMaxHp
+            player.currentHp += (player.maxHp - oldMaxHp) // Add the HP difference to current HP
+            combatLogCallback?.invoke("Spent 1 skill point on Vitality. VIT: ${player.vitality} (+10 Max HP)")
+            return true
+        }
+        combatLogCallback?.invoke("Not enough skill points to increase Vitality.")
+        return false
+    }
+
+    fun spendSkillPointOnSpirit(): Boolean {
+        if (player.skillPoints > 0) {
+            player.skillPoints--
+            player.spirit++
+            val oldMaxMana = player.maxMana
+            player.maxMana = player.effectiveMaxMana
+            player.currentMana += (player.maxMana - oldMaxMana) // Add the mana difference
+            combatLogCallback?.invoke("Spent 1 skill point on Spirit. SPR: ${player.spirit} (+8 Mana)")
+            return true
+        }
+        combatLogCallback?.invoke("Not enough skill points to increase Spirit.")
         return false
     }
 
@@ -271,7 +406,6 @@ class GameEngine {
         player.inventory.add(itemToBuy.copy()) // Add a copy to inventory
 
         // Simplified equip logic: equip if it's a weapon or armor
-        // A more robust system would check item type/slot
         if (itemToBuy.attackBonus > 0 && (player.equippedWeapon == null || itemToBuy.attackBonus > player.equippedWeapon!!.attackBonus)) {
             player.equippedWeapon = itemToBuy.copy()
             combatLogCallback?.invoke("Bought and equipped ${itemToBuy.name}.")
@@ -285,12 +419,23 @@ class GameEngine {
         return "Successfully bought ${itemToBuy.name}."
     }
 
-
-    // This function is not strictly needed anymore if Player has effectiveAttack/Defense getters
-    // but can be kept if direct access to a full Player copy with calculated stats is desired elsewhere.
     fun getPlayerStats(): Player {
-         // The copy will now include skillPoints and inventory by default.
-         // The effectiveAttack and effectiveDefense are now getters in Player class itself.
         return player.copy()
     }
+    
+    // Legacy methods for compatibility - now do nothing since we removed manual attack
+    @Deprecated("Manual attacks have been removed - combat is now automatic based on attack speed")
+    fun fightTick() {
+        // Do nothing - combat is now handled by combatTick()
+    }
+    
+    // Legacy skill point methods for compatibility
+    @Deprecated("Use spendSkillPointOnStrength instead")
+    fun spendSkillPointOnAttack(): Boolean = spendSkillPointOnStrength()
+    
+    @Deprecated("Use spendSkillPointOnVitality instead") 
+    fun spendSkillPointOnDefense(): Boolean = false // Defense is now equipment-based
+    
+    @Deprecated("Use spendSkillPointOnVitality instead")
+    fun spendSkillPointOnMaxHp(): Boolean = spendSkillPointOnVitality()
 }
