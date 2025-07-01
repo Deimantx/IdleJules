@@ -16,6 +16,10 @@
         "source": "com.example.idlerpg.app-main-40:/layout/fragment_shop_dialog.xml"
     },
     {
+        "merged": "com.example.idlerpg.app-debug-38:/layout_fragment_shop_sell_tab.xml.flat",
+        "source": "com.example.idlerpg.app-main-40:/layout/fragment_shop_sell_tab.xml"
+    },
+    {
         "merged": "com.example.idlerpg.app-debug-38:/mipmap-mdpi_ic_launcher.webp.flat",
         "source": "com.example.idlerpg.app-main-40:/mipmap-mdpi/ic_launcher.webp"
     },
@@ -64,6 +68,10 @@
         "source": "com.example.idlerpg.app-main-40:/mipmap-xhdpi/ic_launcher.webp"
     },
     {
+        "merged": "com.example.idlerpg.app-debug-38:/layout_fragment_item_comparison.xml.flat",
+        "source": "com.example.idlerpg.app-main-40:/layout/fragment_item_comparison.xml"
+    },
+    {
         "merged": "com.example.idlerpg.app-debug-38:/layout_layout_shop_item.xml.flat",
         "source": "com.example.idlerpg.app-main-40:/layout/layout_shop_item.xml"
     },
@@ -74,5 +82,9 @@
     {
         "merged": "com.example.idlerpg.app-debug-38:/xml_backup_rules.xml.flat",
         "source": "com.example.idlerpg.app-main-40:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.idlerpg.app-debug-38:/layout_fragment_shop_buy_tab.xml.flat",
+        "source": "com.example.idlerpg.app-main-40:/layout/fragment_shop_buy_tab.xml"
     }
 ]
