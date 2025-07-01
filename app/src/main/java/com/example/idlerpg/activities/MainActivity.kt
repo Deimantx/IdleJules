@@ -7,6 +7,8 @@ import android.text.method.ScrollingMovementMethod
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.Spinner
+import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.idlerpg.R
@@ -21,40 +23,49 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvPlayerLevel: TextView
     private lateinit var tvPlayerExperience: TextView
     private lateinit var tvPlayerHP: TextView
+    private lateinit var tvPlayerMana: TextView
     private lateinit var tvPlayerAttack: TextView
     private lateinit var tvPlayerDefense: TextView
     private lateinit var tvPlayerCoins: TextView
 
-    // Skill Points UI
+    // New Stat System UI
+    private lateinit var tvPlayerStats: TextView
+    private lateinit var tvPlayerCombatStats: TextView
     private lateinit var tvPlayerSkillPoints: TextView
-    private lateinit var btnIncreaseAttack: Button
-    private lateinit var btnIncreaseDefense: Button
-    private lateinit var btnIncreaseMaxHp: Button
+    private lateinit var btnIncreaseStrength: Button
+    private lateinit var btnIncreaseAgility: Button
+    private lateinit var btnIncreaseIntelligence: Button
+    private lateinit var btnIncreaseVitality: Button
+    private lateinit var btnIncreaseSpirit: Button
+
+    // Monster Selection UI
+    private lateinit var spinnerMonsterSelect: Spinner
+    private lateinit var btnSelectMonster: Button
 
     // Monster Info UI
     private lateinit var tvMonsterName: TextView
     private lateinit var tvMonsterHP: TextView
     private lateinit var tvMonsterType: TextView
     private lateinit var tvMonsterAbility: TextView
+    private lateinit var tvMonsterLevel: TextView
 
     // Player Status UI
     private lateinit var tvPlayerStatusEffects: TextView
 
     // Other UI
     private lateinit var tvCombatLog: TextView
-    private lateinit var btnManualAttack: Button
     private lateinit var btnShop: Button
 
     private val gameLoopHandler = Handler(Looper.getMainLooper())
-    private val autoFightRunnable: Runnable = object : Runnable {
+    private val combatTickRunnable: Runnable = object : Runnable {
         override fun run() {
-            viewModel.autoFightTick()
-            gameLoopHandler.postDelayed(this, AUTO_FIGHT_INTERVAL_MS)
+            viewModel.combatTick()
+            gameLoopHandler.postDelayed(this, COMBAT_TICK_INTERVAL_MS)
         }
     }
 
     companion object {
-        private const val AUTO_FIGHT_INTERVAL_MS = 2000L // 2 seconds
+        private const val COMBAT_TICK_INTERVAL_MS = 200L // 200ms for smooth combat
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         initializeUI()
         setupObservers()
         setupButtonClickListeners()
+        setupMonsterSpinner()
     }
 
     private fun initializeUI() {
@@ -71,21 +83,31 @@ class MainActivity : AppCompatActivity() {
         tvPlayerLevel = findViewById(R.id.tvPlayerLevel)
         tvPlayerExperience = findViewById(R.id.tvPlayerExperience)
         tvPlayerHP = findViewById(R.id.tvPlayerHP)
+        tvPlayerMana = findViewById(R.id.tvPlayerMana)
         tvPlayerAttack = findViewById(R.id.tvPlayerAttack)
         tvPlayerDefense = findViewById(R.id.tvPlayerDefense)
         tvPlayerCoins = findViewById(R.id.tvPlayerCoins)
 
-        // Skill Points
+        // New Stats
+        tvPlayerStats = findViewById(R.id.tvPlayerStats)
+        tvPlayerCombatStats = findViewById(R.id.tvPlayerCombatStats)
         tvPlayerSkillPoints = findViewById(R.id.tvPlayerSkillPoints)
-        btnIncreaseAttack = findViewById(R.id.btnIncreaseAttack)
-        btnIncreaseDefense = findViewById(R.id.btnIncreaseDefense)
-        btnIncreaseMaxHp = findViewById(R.id.btnIncreaseMaxHp)
+        btnIncreaseStrength = findViewById(R.id.btnIncreaseStrength)
+        btnIncreaseAgility = findViewById(R.id.btnIncreaseAgility)
+        btnIncreaseIntelligence = findViewById(R.id.btnIncreaseIntelligence)
+        btnIncreaseVitality = findViewById(R.id.btnIncreaseVitality)
+        btnIncreaseSpirit = findViewById(R.id.btnIncreaseSpirit)
+
+        // Monster Selection
+        spinnerMonsterSelect = findViewById(R.id.spinnerMonsterSelect)
+        btnSelectMonster = findViewById(R.id.btnSelectMonster)
 
         // Monster Info
         tvMonsterName = findViewById(R.id.tvMonsterName)
         tvMonsterHP = findViewById(R.id.tvMonsterHP)
         tvMonsterType = findViewById(R.id.tvMonsterType)
         tvMonsterAbility = findViewById(R.id.tvMonsterAbility)
+        tvMonsterLevel = findViewById(R.id.tvMonsterLevel)
 
         // Player Status
         tvPlayerStatusEffects = findViewById(R.id.tvPlayerStatusEffects)
@@ -94,7 +116,6 @@ class MainActivity : AppCompatActivity() {
         tvCombatLog = findViewById(R.id.tvCombatLog)
         tvCombatLog.movementMethod = ScrollingMovementMethod()
 
-        btnManualAttack = findViewById(R.id.btnManualAttack)
         btnShop = findViewById(R.id.btnShop)
     }
 
@@ -102,18 +123,31 @@ class MainActivity : AppCompatActivity() {
         viewModel.playerData.observe(this) { player ->
             player?.let {
                 tvPlayerLevel.text = "Level: ${it.level}"
-                tvPlayerHP.text = "HP: ${it.currentHp} / ${it.maxHp}"
-                // Use effectiveAttack and effectiveDefense from Player model
-                tvPlayerAttack.text = "Attack: ${it.effectiveAttack} (Base: ${it.attack})"
-                tvPlayerDefense.text = "Defense: ${it.effectiveDefense} (Base: ${it.defense})"
+                tvPlayerHP.text = "HP: ${it.currentHp} / ${it.effectiveMaxHp}"
+                tvPlayerMana.text = "Mana: ${it.currentMana} / ${it.effectiveMaxMana}"
+                tvPlayerAttack.text = "Attack: ${it.effectiveAttack}"
+                tvPlayerDefense.text = "Defense: ${it.effectiveDefense}"
                 tvPlayerCoins.text = "Coins: ${it.coins}"
                 tvPlayerSkillPoints.text = "Available Skill Points: ${it.skillPoints}"
 
+                // Display new stats
+                tvPlayerStats.text = "STR: ${it.strength} | AGI: ${it.agility} | INT: ${it.intelligence} | VIT: ${it.vitality} | SPR: ${it.spirit}"
+                
+                // Display combat stats
+                val combatStats = "Crit Rate: ${"%.1f".format(it.critRate)}% | " +
+                        "Crit Dmg: ${"%.1f".format(it.critDamageMultiplier * 100)}% | " +
+                        "Dodge: ${"%.1f".format(it.dodgeChance)}% | " +
+                        "Hit: ${"%.1f".format(it.hitChance)}% | " +
+                        "Speed: ${"%.1f".format(it.effectiveAttackSpeed / 1000f)}s"
+                tvPlayerCombatStats.text = combatStats
+
                 // Enable/disable skill point buttons
                 val hasSkillPoints = it.skillPoints > 0
-                btnIncreaseAttack.isEnabled = hasSkillPoints
-                btnIncreaseDefense.isEnabled = hasSkillPoints
-                btnIncreaseMaxHp.isEnabled = hasSkillPoints
+                btnIncreaseStrength.isEnabled = hasSkillPoints
+                btnIncreaseAgility.isEnabled = hasSkillPoints
+                btnIncreaseIntelligence.isEnabled = hasSkillPoints
+                btnIncreaseVitality.isEnabled = hasSkillPoints
+                btnIncreaseSpirit.isEnabled = hasSkillPoints
 
                 // Update status effects
                 tvPlayerStatusEffects.text = "Status: ${it.getStatusEffectsDescription()}"
@@ -128,6 +162,7 @@ class MainActivity : AppCompatActivity() {
             monster?.let {
                 tvMonsterName.text = "Monster: ${it.name}"
                 tvMonsterHP.text = "HP: ${it.hp} / ${it.maxHp}"
+                tvMonsterLevel.text = "Level: ${it.level}"
                 tvMonsterType.text = "Type: ${it.type.name.lowercase().replaceFirstChar { char -> char.uppercase() }}"
                 val abilityText = if (it.ability.name != "NONE") {
                     it.getAbilityDescription()
@@ -136,8 +171,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 tvMonsterAbility.text = "Ability: $abilityText"
             } ?: run {
-                tvMonsterName.text = "Monster: None"
+                tvMonsterName.text = "Monster: None Selected"
                 tvMonsterHP.text = "HP: -"
+                tvMonsterLevel.text = "Level: -"
                 tvMonsterType.text = "Type: -"
                 tvMonsterAbility.text = "Ability: -"
             }
@@ -158,33 +194,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupButtonClickListeners() {
-        btnManualAttack.setOnClickListener {
-            viewModel.manualAttack()
-        }
-
         btnShop.setOnClickListener {
             ShopDialogFragment().show(supportFragmentManager, ShopDialogFragment.TAG)
         }
 
-        btnIncreaseAttack.setOnClickListener {
-            viewModel.spendSkillPointAttack()
+        // New stat system buttons
+        btnIncreaseStrength.setOnClickListener {
+            viewModel.spendSkillPointStrength()
         }
-        btnIncreaseDefense.setOnClickListener {
-            viewModel.spendSkillPointDefense()
+        btnIncreaseAgility.setOnClickListener {
+            viewModel.spendSkillPointAgility()
         }
-        btnIncreaseMaxHp.setOnClickListener {
-            viewModel.spendSkillPointMaxHp()
+        btnIncreaseIntelligence.setOnClickListener {
+            viewModel.spendSkillPointIntelligence()
         }
+        btnIncreaseVitality.setOnClickListener {
+            viewModel.spendSkillPointVitality()
+        }
+        btnIncreaseSpirit.setOnClickListener {
+            viewModel.spendSkillPointSpirit()
+        }
+
+        // Monster selection
+        btnSelectMonster.setOnClickListener {
+            val selectedMonster = spinnerMonsterSelect.selectedItem as? String
+            selectedMonster?.let {
+                viewModel.selectMonster(it)
+            }
+        }
+    }
+
+    private fun setupMonsterSpinner() {
+        val monsters = viewModel.getAvailableMonsters()
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, monsters)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerMonsterSelect.adapter = adapter
     }
 
     override fun onResume() {
         super.onResume()
-        gameLoopHandler.postDelayed(autoFightRunnable, AUTO_FIGHT_INTERVAL_MS)
+        gameLoopHandler.postDelayed(combatTickRunnable, COMBAT_TICK_INTERVAL_MS)
     }
 
     override fun onPause() {
         super.onPause()
-        gameLoopHandler.removeCallbacks(autoFightRunnable)
+        gameLoopHandler.removeCallbacks(combatTickRunnable)
         viewModel.saveGame()
     }
 }

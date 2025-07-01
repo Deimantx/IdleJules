@@ -38,7 +38,15 @@ data class Monster(
     val abilityCooldown: Int = 0, // Turns between ability use (0 = every turn)
     var currentCooldown: Int = 0, // Current cooldown counter
     val description: String = "",
-    val level: Int = 1
+    val level: Int = 1,
+    
+    // New combat stats
+    val attackSpeed: Float = 2500f, // Milliseconds between attacks - larger monsters are slower
+    var lastAttackTime: Long = 0L,
+    val critRate: Float = 5f, // Base crit rate for monsters
+    val critDamage: Float = 1.8f, // Crit damage multiplier
+    val dodgeChance: Float = 2f, // Base dodge chance
+    val hitChance: Float = 90f // Base hit chance
 ) {
     // Calculate if the monster can use its ability this turn
     fun canUseAbility(): Boolean = currentCooldown <= 0
@@ -51,6 +59,16 @@ data class Monster(
     // Reduce cooldown each turn
     fun tickCooldown() {
         if (currentCooldown > 0) currentCooldown--
+    }
+    
+    // Check if monster can attack based on attack speed
+    fun canAttack(currentTime: Long): Boolean {
+        return currentTime - lastAttackTime >= attackSpeed
+    }
+    
+    // Update last attack time
+    fun updateAttackTime(currentTime: Long) {
+        lastAttackTime = currentTime
     }
     
     // Get ability description for UI
