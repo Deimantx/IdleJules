@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Item Comparison"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+        <!-- Selected Item Column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingEnd="8dp"
+            tools:ignore="RtlSymmetry">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Selected Item"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvCompSelectedName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Item Name"/>
+            <TextView
+                android:id="@+id/tvCompSelectedAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="ATK: 10"/>
+            <TextView
+                android:id="@+id/tvCompSelectedDefense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="DEF: 5"/>
+            <TextView
+                android:id="@+id/tvCompSelectedAttackSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Speed: -100ms"/>
+            <TextView
+                android:id="@+id/tvCompSelectedCritRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Crit Rate: 5%"/>
+            <TextView
+                android:id="@+id/tvCompSelectedCritDamage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Crit DMG: 10%"/>
+            <TextView
+                android:id="@+id/tvCompSelectedDodge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Dodge: 3%"/>
+            <TextView
+                android:id="@+id/tvCompSelectedHit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Hit: 2%"/>
+            <TextView
+                android:id="@+id/tvCompSelectedCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                tools:text="Cost: 100"/>
+        </LinearLayout>
+
+        <!-- Equipped Item Column -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            tools:ignore="RtlSymmetry">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Equipped Item"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp"/>
+
+            <TextView
+                android:id="@+id/tvCompEquippedName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Equipped Item Name"/>
+            <TextView
+                android:id="@+id/tvCompEquippedAttack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="ATK: 8"/>
+            <TextView
+                android:id="@+id/tvCompEquippedDefense"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="DEF: 3"/>
+            <TextView
+                android:id="@+id/tvCompEquippedAttackSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Speed: -50ms"/>
+            <TextView
+                android:id="@+id/tvCompEquippedCritRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Crit Rate: 2%"/>
+            <TextView
+                android:id="@+id/tvCompEquippedCritDamage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Crit DMG: 5%"/>
+            <TextView
+                android:id="@+id/tvCompEquippedDodge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Dodge: 1%"/>
+            <TextView
+                android:id="@+id/tvCompEquippedHit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Hit: 1%"/>
+             <TextView
+                android:id="@+id/tvCompEquippedCost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                tools:text="Cost: 50"
+                android:visibility="invisible"/> <!-- Cost for equipped item usually not shown or less relevant -->
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCloseComparison"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Close"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout>

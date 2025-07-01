@@ -152,6 +152,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _toastMessage.value = SingleEvent(message)
     }
 
+    fun sellPlayerItem(item: GearItem) {
+        val message = _gameEngine.sellItem(item)
+        _playerData.value = _gameEngine.getPlayerStats() // Update player data after selling
+        _toastMessage.value = SingleEvent(message)
+    }
+
     fun saveGame() {
         _repository.savePlayer(_gameEngine.player)
         _toastMessage.value = SingleEvent("Game Saved!")

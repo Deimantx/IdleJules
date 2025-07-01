@@ -9,23 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.idlerpg.R
 import com.example.idlerpg.models.GearItem
 
-class ShopItemAdapter(
+class PlayerInventoryAdapter(
     private var items: List<GearItem>,
-    private val onBuyClicked: (GearItem) -> Unit,
-    private val onCompareClicked: (GearItem) -> Unit // New callback
-) : RecyclerView.Adapter<ShopItemAdapter.ShopItemViewHolder>() {
+    private val onSellClicked: (GearItem) -> Unit,
+    private val onCompareClicked: (GearItem) -> Unit, // New callback
+    private val sellPricePercentage: Float = 0.5f // Default sell price percentage
+) : RecyclerView.Adapter<PlayerInventoryAdapter.PlayerInventoryViewHolder>() {
 
-    var playerCoins: Int = 0 // Property to hold current player coins
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShopItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayerInventoryViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.layout_shop_item, parent, false)
-        return ShopItemViewHolder(view) // Pass callback via bind method
+            .inflate(R.layout.layout_shop_item, parent, false) // Reusing layout_shop_item
+        return PlayerInventoryViewHolder(view) // Callback passed via bind
     }
 
-    override fun onBindViewHolder(holder: ShopItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: PlayerInventoryViewHolder, position: Int) {
         val item = items[position]
-        holder.bind(item, onBuyClicked, onCompareClicked, playerCoins) // Pass playerCoins
+        holder.bind(item, onSellClicked, onCompareClicked, sellPricePercentage) // Pass compare callback
     }
 
     override fun getItemCount(): Int = items.size
@@ -35,10 +34,10 @@ class ShopItemAdapter(
         notifyDataSetChanged() // Consider using DiffUtil for better performance
     }
 
-    class ShopItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class PlayerInventoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val itemName: TextView = itemView.findViewById(R.id.tvItemName)
-        private val itemCost: TextView = itemView.findViewById(R.id.tvItemCost)
-        private val buyButton: Button = itemView.findViewById(R.id.btnBuyItem)
+        private val itemCost: TextView = itemView.findViewById(R.id.tvItemCost) // Will display sell price
+        private val actionButton: Button = itemView.findViewById(R.id.btnBuyItem) // Will be "Sell"
 
         // Stat TextViews from layout_shop_item.xml
         private val tvItemAttackBonus: TextView = itemView.findViewById(R.id.tvItemAttackBonus)
@@ -49,34 +48,24 @@ class ShopItemAdapter(
         private val tvItemDodge: TextView = itemView.findViewById(R.id.tvItemDodge)
         private val tvItemHit: TextView = itemView.findViewById(R.id.tvItemHit)
 
-
-        // Constructor remains simple
-        constructor(itemView: View) : super(itemView)
-
         fun bind(
             gearItem: GearItem,
-            onBuyClicked: (GearItem) -> Unit,
-            onCompareClicked: (GearItem) -> Unit, // Receive callback in bind
-            currentCoins: Int // Receive current player coins
+            onSellClicked: (GearItem) -> Unit,
+            onCompareClicked: (GearItem) -> Unit, // Receive callback
+            sellPricePercentage: Float
         ) {
             itemName.text = gearItem.name
-            itemCost.text = "Cost: ${gearItem.cost} Coins"
-            buyButton.text = "Buy"
 
-            // Enable/disable buy button based on player coins
-            val canAfford = currentCoins >= gearItem.cost
-            buyButton.isEnabled = canAfford
-            buyButton.alpha = if (canAfford) 1.0f else 0.5f
+            val sellPrice = (gearItem.cost * sellPricePercentage).toInt()
+            itemCost.text = "Sell Price: $sellPrice Coins"
 
-            buyButton.setOnClickListener { onBuyClicked(gearItem) }
+            actionButton.text = "Sell"
+            actionButton.setOnClickListener { onSellClicked(gearItem) }
 
-            // Make the entire item view clickable for comparison
             itemView.setOnClickListener {
                 onCompareClicked(gearItem)
             }
-            // Ensure the buy button click doesn't also trigger the itemView click listener
-            // by letting the button consume the event, or by checking source in a single listener.
-            // For simplicity, separate listeners are fine if the button is on top and consumes touch.
+            // Ensure the sell button click doesn't also trigger the itemView click listener.
 
             // Helper function to set stat text and visibility
             fun setStatText(textView: TextView, prefix: String, value: Number, unit: String = "", positiveSign: Boolean = true) {
@@ -96,13 +85,13 @@ class ShopItemAdapter(
 
             setStatText(tvItemAttackBonus, "ATK:", gearItem.attackBonus)
             setStatText(tvItemDefenseBonus, "DEF:", gearItem.defenseBonus)
-            setStatText(tvItemAttackSpeed, "Speed:", gearItem.attackSpeedBonus, "ms", positiveSign = false) // Speed bonus is often negative for faster
+            setStatText(tvItemAttackSpeed, "Speed:", gearItem.attackSpeedBonus, "ms", positiveSign = false)
             setStatText(tvItemCritRate, "Crit Rate:", gearItem.critRateBonus, "%")
             setStatText(tvItemCritDamage, "Crit DMG:", gearItem.critDamageBonus, "%")
             setStatText(tvItemDodge, "Dodge:", gearItem.dodgeBonus, "%")
             setStatText(tvItemHit, "Hit:", gearItem.hitBonus, "%")
 
-            // Check if any stat is visible to manage overall stats container visibility (optional)
+            // Optional: Manage visibility of stats container (llItemStatsContainer) if needed
             val statsContainer: ViewGroup? = itemView.findViewById(R.id.llItemStatsContainer)
             statsContainer?.let {
                 var anyStatVisible = false
@@ -112,9 +101,7 @@ class ShopItemAdapter(
                         break
                     }
                 }
-                // If you want to hide the container itself if no stats, uncomment below
-                // it.visibility = if (anyStatVisible) View.VISIBLE else View.GONE
-                // Or add a "No stat bonuses" text if all are GONE
+                 // If you want to hide the container or show "No stat bonuses", add logic here
             }
         }
     }
