@@ -1,111 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp"
-    android:gravity="center_vertical">
+    android:layout_margin="8dp"
+    app:cardBackgroundColor="@color/rpg_card"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="6dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
+        <!-- Item Icon/Type Indicator -->
         <TextView
-            android:id="@+id/tvItemName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="Item Name" />
+            android:id="@+id/tvItemIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="⚔️"
+            android:textSize="24sp"
+            android:gravity="center"
+            android:background="@color/rpg_surface"
+            android:textColor="@color/rpg_gold"
+            android:layout_marginEnd="16dp"/>
 
+        <!-- Item Details -->
         <LinearLayout
-            android:id="@+id/llItemStatsContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Item Name -->
             <TextView
-                android:id="@+id/tvItemAttackBonus"
+                android:id="@+id/tvItemName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="ATK: +10"
-                tools:visibility="visible"/>
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/rpg_text_primary"
+                android:text="Item Name"
+                android:layout_marginBottom="4dp" />
 
-            <TextView
-                android:id="@+id/tvItemDefenseBonus"
+            <!-- Stats Container -->
+            <LinearLayout
+                android:id="@+id/llItemStatsContainer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="DEF: +5"
-                tools:visibility="visible"/>
+                android:orientation="vertical"
+                android:layout_marginBottom="8dp">
 
-            <TextView
-                android:id="@+id/tvItemAttackSpeed"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="Speed: -100ms"
-                tools:visibility="visible"/>
+                <TextView
+                    android:id="@+id/tvItemAttackBonus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/ic_menu_edit"
+                    android:drawablePadding="4dp"
+                    tools:text="ATK: +10"
+                    tools:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/tvItemCritRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="Crit Rate: +5%"
-                tools:visibility="visible"/>
+                <TextView
+                    android:id="@+id/tvItemDefenseBonus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/ic_menu_preferences"
+                    android:drawablePadding="4dp"
+                    tools:text="DEF: +5"
+                    tools:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/tvItemCritDamage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="Crit DMG: +10%"
-                tools:visibility="visible"/>
+                <TextView
+                    android:id="@+id/tvItemAttackSpeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/ic_media_ff"
+                    android:drawablePadding="4dp"
+                    tools:text="Speed: -100ms"
+                    tools:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/tvItemDodge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="Dodge: +3%"
-                tools:visibility="visible"/>
+                <TextView
+                    android:id="@+id/tvItemCritRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/btn_star_big_on"
+                    android:drawablePadding="4dp"
+                    tools:text="Crit Rate: +5%"
+                    tools:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/tvItemHit"
+                <TextView
+                    android:id="@+id/tvItemCritDamage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/btn_star_big_on"
+                    android:drawablePadding="4dp"
+                    tools:text="Crit DMG: +10%"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/tvItemDodge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/ic_menu_rotate"
+                    android:drawablePadding="4dp"
+                    tools:text="Dodge: +3%"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/tvItemHit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:visibility="gone"
+                    android:drawableStart="@android:drawable/ic_menu_mylocation"
+                    android:drawablePadding="4dp"
+                    tools:text="Hit: +2%"
+                    tools:visibility="visible"/>
+
+            </LinearLayout>
+
+            <!-- Cost Section -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:visibility="gone"
-                tools:text="Hit: +2%"
-                tools:visibility="visible"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvItemCost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/rpg_gold"
+                    android:text="Cost: 100 Coins"
+                    android:drawableStart="@android:drawable/btn_star_big_on"
+                    android:drawablePadding="4dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvItemCost"
+        <!-- Buy Button -->
+        <Button
+            android:id="@+id/btnBuyItem"
             android:layout_width="wrap_content"
-            android:layout_marginTop="4dp"
             android:layout_height="wrap_content"
+            android:text="💰 BUY"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/button_buy"
             android:textSize="14sp"
-            android:textStyle="italic"
-            android:text="Cost: 100 Coins" />
+            android:textStyle="bold"
+            android:minWidth="80dp"
+            android:layout_marginStart="12dp" />
+
     </LinearLayout>
 
-    <Button
-        android:id="@+id/btnBuyItem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:text="Buy" />
-</LinearLayout>
+</androidx.cardview.widget.CardView>

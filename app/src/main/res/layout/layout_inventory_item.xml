@@ -1,100 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="12dp"
-    android:layout_margin="4dp"
-    android:background="@drawable/item_background"
-    android:elevation="2dp">
+    android:layout_margin="6dp"
+    app:cardBackgroundColor="@color/rpg_card"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="12dp">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
+            <!-- Item Icon -->
             <TextView
-                android:id="@+id/tvInventoryItemName"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvInventoryItemIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:text="⚔️"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:background="@color/rpg_surface"
+                android:textColor="@color/rpg_gold"
+                android:layout_marginEnd="12dp"/>
+
+            <!-- Item Details -->
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Item Name"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/black" />
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvInventoryItemType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Type"
-                android:textSize="12sp"
-                android:textColor="@android:color/darker_gray" />
+                <TextView
+                    android:id="@+id/tvInventoryItemName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Item Name"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/rpg_text_primary" />
 
-            <TextView
-                android:id="@+id/tvInventoryItemStats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stats"
-                android:textSize="12sp"
-                android:textColor="@android:color/black"
-                android:layout_marginTop="4dp" />
+                <TextView
+                    android:id="@+id/tvInventoryItemType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Type"
+                    android:textSize="12sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:layout_marginTop="2dp" />
 
-            <TextView
-                android:id="@+id/tvInventoryItemDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:textSize="11sp"
-                android:textColor="@android:color/darker_gray"
-                android:textStyle="italic"
-                android:layout_marginTop="2dp" />
+                <TextView
+                    android:id="@+id/tvInventoryItemStats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stats"
+                    android:textSize="12sp"
+                    android:textColor="@color/rpg_text_secondary"
+                    android:layout_marginTop="4dp" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvInventoryItemDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Description"
+                    android:textSize="11sp"
+                    android:textColor="@color/rpg_text_muted"
+                    android:textStyle="italic"
+                    android:layout_marginTop="2dp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="end">
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvInventoryItemValue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Value: 100"
-                android:textSize="12sp"
-                android:textColor="@color/gold_color"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
-
+            <!-- Value and Actions -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:gravity="end">
 
-                <Button
-                    android:id="@+id/btnEquipInventoryItem"
+                <TextView
+                    android:id="@+id/tvInventoryItemValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Equip"
+                    android:text="💰 100"
                     android:textSize="12sp"
-                    android:layout_marginEnd="4dp" />
+                    android:textColor="@color/rpg_gold"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
 
-                <Button
-                    android:id="@+id/btnSellInventoryItem"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sell"
-                    android:textSize="12sp" />
+                    android:orientation="horizontal">
 
+                    <Button
+                        android:id="@+id/btnEquipInventoryItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚡ Equip"
+                        android:textSize="11sp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/button_equip"
+                        android:layout_marginEnd="4dp"
+                        android:minWidth="60dp" />
+
+                    <Button
+                        android:id="@+id/btnSellInventoryItem"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="💸 Sell"
+                        android:textSize="11sp"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/button_sell"
+                        android:minWidth="60dp" />
+
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>
