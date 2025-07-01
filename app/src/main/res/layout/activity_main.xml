@@ -38,28 +38,11 @@
                 android:layout_marginBottom="4dp"
                 android:text="XP: 0 / 100" />
 
-            <!-- Custom Progress Bar using Views -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="16dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="8dp"
-                android:background="#FFD0D0D0"
-                android:orientation="horizontal">
-                
-                <View
-                    android:id="@+id/progressBarExperience"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="50"
-                    android:background="#FF4CAF50" />
-                
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="50"
-                    android:background="@android:color/transparent" />
-            </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progressBarExperience"
+                style="@style/ProgressBarStyle"
+                android:max="100"
+                android:progress="50" />
         </LinearLayout>
 
         <!-- Main Combat Stats Grid -->

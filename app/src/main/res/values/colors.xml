@@ -9,9 +9,6 @@
     <color name="white">#FFFFFFFF</color>
     
     <!-- UI Enhancement Colors -->
-    <color name="progress_bar_background">#FFD0D0D0</color>
-    <color name="progress_bar_primary">#FF2E7D32</color>
-    <color name="progress_bar_secondary">#FF1976D2</color>
     <color name="stat_primary">#FF2C3E50</color>
     <color name="stat_secondary">#FF34495E</color>
     <color name="stat_accent">#FF3498DB</color>
