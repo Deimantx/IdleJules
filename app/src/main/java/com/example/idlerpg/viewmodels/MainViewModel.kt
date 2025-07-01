@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.idlerpg.game.GameEngine
+import com.example.idlerpg.game.Location
 import com.example.idlerpg.models.GearItem
 import com.example.idlerpg.models.Monster
 import com.example.idlerpg.models.Player
@@ -72,6 +73,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _gameEngine.combatTick()
         _playerData.postValue(_gameEngine.getPlayerStats())
         _monsterData.postValue(_gameEngine.currentMonster)
+    }
+
+    // Location selection methods
+    fun selectLocation(location: Location) {
+        _gameEngine.selectLocation(location)
+        _monsterData.postValue(_gameEngine.currentMonster)
+    }
+
+    fun getMonstersForLocation(location: Location): List<String> {
+        return _gameEngine.getMonstersForLocation(location)
     }
 
     // Monster selection methods

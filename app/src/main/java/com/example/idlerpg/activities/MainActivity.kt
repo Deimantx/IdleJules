@@ -3,6 +3,7 @@ package com.example.idlerpg.activities
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.Html
 import android.text.method.ScrollingMovementMethod
 import android.widget.Button
 import android.widget.TextView
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.idlerpg.R
+import com.example.idlerpg.game.Location
 import com.example.idlerpg.ui.ShopDialogFragment // Import the dialog
 import com.example.idlerpg.viewmodels.MainViewModel
 
@@ -37,6 +39,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnIncreaseIntelligence: Button
     private lateinit var btnIncreaseVitality: Button
     private lateinit var btnIncreaseSpirit: Button
+
+    // Location Selection UI
+    private lateinit var spinnerLocationSelect: Spinner
+    private lateinit var btnSelectLocation: Button
 
     // Monster Selection UI
     private lateinit var spinnerMonsterSelect: Spinner
@@ -75,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         initializeUI()
         setupObservers()
         setupButtonClickListeners()
+        setupLocationSpinner()
         setupMonsterSpinner()
     }
 
@@ -97,6 +104,10 @@ class MainActivity : AppCompatActivity() {
         btnIncreaseIntelligence = findViewById(R.id.btnIncreaseIntelligence)
         btnIncreaseVitality = findViewById(R.id.btnIncreaseVitality)
         btnIncreaseSpirit = findViewById(R.id.btnIncreaseSpirit)
+
+        // Location Selection
+        spinnerLocationSelect = findViewById(R.id.spinnerLocationSelect)
+        btnSelectLocation = findViewById(R.id.btnSelectLocation)
 
         // Monster Selection
         spinnerMonsterSelect = findViewById(R.id.spinnerMonsterSelect)
@@ -180,7 +191,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.combatLog.observe(this) { logMessages ->
-            tvCombatLog.text = logMessages.joinToString("\n")
+            val htmlText = logMessages.joinToString("<br>")
+            tvCombatLog.text = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_COMPACT)
             if (tvCombatLog.lineCount > 0) {
                 tvCombatLog.scrollTo(0, 0)
             }
@@ -215,6 +227,16 @@ class MainActivity : AppCompatActivity() {
             viewModel.spendSkillPointSpirit()
         }
 
+        // Location selection
+        btnSelectLocation.setOnClickListener {
+            val selectedLocation = spinnerLocationSelect.selectedItem as? String
+            selectedLocation?.let {
+                val location = Location.valueOf(it.uppercase())
+                viewModel.selectLocation(location)
+                updateMonsterSpinner(location)
+            }
+        }
+
         // Monster selection
         btnSelectMonster.setOnClickListener {
             val selectedMonster = spinnerMonsterSelect.selectedItem as? String
@@ -224,8 +246,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupLocationSpinner() {
+        val locations = listOf("Forest", "Mine", "Outskirts")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, locations)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerLocationSelect.adapter = adapter
+    }
+
     private fun setupMonsterSpinner() {
-        val monsters = viewModel.getAvailableMonsters()
+        val monsters = listOf("Select a location first")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, monsters)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerMonsterSelect.adapter = adapter
+    }
+
+    private fun updateMonsterSpinner(location: Location) {
+        val monsters = viewModel.getMonstersForLocation(location)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, monsters)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerMonsterSelect.adapter = adapter
