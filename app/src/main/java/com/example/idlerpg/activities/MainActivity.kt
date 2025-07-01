@@ -15,7 +15,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.idlerpg.R
 import com.example.idlerpg.game.Location
-import com.example.idlerpg.ui.ShopDialogFragment // Import the dialog
+import com.example.idlerpg.ui.ShopDialogFragment
+import com.example.idlerpg.ui.InventoryDialogFragment
+import com.example.idlerpg.ui.EquipmentDialogFragment
 import com.example.idlerpg.viewmodels.MainViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -70,6 +72,8 @@ class MainActivity : AppCompatActivity() {
     // Other UI
     private lateinit var tvCombatLog: TextView
     private lateinit var btnShop: Button
+    private lateinit var btnInventory: Button
+    private lateinit var btnEquipment: Button
 
     private val gameLoopHandler = Handler(Looper.getMainLooper())
     private val combatTickRunnable: Runnable = object : Runnable {
@@ -145,6 +149,8 @@ class MainActivity : AppCompatActivity() {
         tvCombatLog.movementMethod = ScrollingMovementMethod()
 
         btnShop = findViewById(R.id.btnShop)
+        btnInventory = findViewById(R.id.btnInventory)
+        btnEquipment = findViewById(R.id.btnEquipment)
     }
 
     private fun setupObservers() {
@@ -268,6 +274,14 @@ class MainActivity : AppCompatActivity() {
     private fun setupButtonClickListeners() {
         btnShop.setOnClickListener {
             ShopDialogFragment().show(supportFragmentManager, ShopDialogFragment.TAG)
+        }
+
+        btnInventory.setOnClickListener {
+            InventoryDialogFragment().show(supportFragmentManager, InventoryDialogFragment.TAG)
+        }
+
+        btnEquipment.setOnClickListener {
+            EquipmentDialogFragment().show(supportFragmentManager, EquipmentDialogFragment.TAG)
         }
 
         // New stat system buttons

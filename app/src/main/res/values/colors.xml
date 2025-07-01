@@ -14,4 +14,5 @@
     <color name="stat_accent">#FF3498DB</color>
     <color name="combat_stat_bg">#FFF8F9FA</color>
     <color name="section_divider">#FFBDC3C7</color>
+    <color name="gold_color">#FFD4AF37</color>
 </resources>

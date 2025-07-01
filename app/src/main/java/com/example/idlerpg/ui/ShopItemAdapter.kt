@@ -94,7 +94,18 @@ class ShopItemAdapter(
 
             setStatText(tvItemAttackBonus, "ATK:", gearItem.attackBonus)
             setStatText(tvItemDefenseBonus, "DEF:", gearItem.defenseBonus)
-            setStatText(tvItemAttackSpeed, "Speed:", gearItem.attackSpeedBonus, "ms", positiveSign = false) // Speed bonus is often negative for faster
+            
+            // Display HP and Mana bonuses if they exist
+            if (gearItem.hpBonus > 0) {
+                tvItemAttackSpeed.text = "HP: +${gearItem.hpBonus}"
+                tvItemAttackSpeed.visibility = View.VISIBLE
+            } else if (gearItem.manaBonus > 0) {
+                tvItemAttackSpeed.text = "Mana: +${gearItem.manaBonus}"
+                tvItemAttackSpeed.visibility = View.VISIBLE
+            } else {
+                setStatText(tvItemAttackSpeed, "Speed:", gearItem.attackSpeedBonus, "ms", positiveSign = false)
+            }
+            
             setStatText(tvItemCritRate, "Crit Rate:", gearItem.critRateBonus, "%")
             setStatText(tvItemCritDamage, "Crit DMG:", gearItem.critDamageBonus, "%")
             setStatText(tvItemDodge, "Dodge:", gearItem.dodgeBonus, "%")

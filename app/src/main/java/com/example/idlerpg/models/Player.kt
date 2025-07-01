@@ -1,5 +1,7 @@
 package com.example.idlerpg.models
 
+import kotlin.math.pow
+
 data class StatusEffect(
     val type: String,
     var duration: Int, // Remaining turns
@@ -18,6 +20,9 @@ data class Player(
     var coins: Int = 0,
     var equippedWeapon: GearItem? = null,
     var equippedArmor: GearItem? = null,
+    var equippedShield: GearItem? = null,
+    var equippedAmulet: GearItem? = null,
+    var equippedRing: GearItem? = null,
     var skillPoints: Int = 0,
     var inventory: MutableList<GearItem> = mutableListOf(),
     var statusEffects: MutableList<StatusEffect> = mutableListOf(),
@@ -36,33 +41,69 @@ data class Player(
 ) {
     // Effective stats including gear bonuses and stat-based calculations
     val effectiveAttack: Int
-        get() = (attack + strength * 2 + (equippedWeapon?.attackBonus ?: 0))
+        get() = (attack + strength * 2 + 
+                (equippedWeapon?.attackBonus ?: 0) +
+                (equippedShield?.attackBonus ?: 0) +
+                (equippedAmulet?.attackBonus ?: 0) +
+                (equippedRing?.attackBonus ?: 0))
 
     val effectiveDefense: Int
-        get() = defense + (equippedArmor?.defenseBonus ?: 0)
+        get() = defense + 
+                (equippedArmor?.defenseBonus ?: 0) +
+                (equippedShield?.defenseBonus ?: 0) +
+                (equippedAmulet?.defenseBonus ?: 0) +
+                (equippedRing?.defenseBonus ?: 0)
     
     val effectiveMaxHp: Int
-        get() = maxHp + (vitality * 10)
+        get() = maxHp + (vitality * 10) +
+                (equippedArmor?.hpBonus ?: 0) +
+                (equippedShield?.hpBonus ?: 0) +
+                (equippedAmulet?.hpBonus ?: 0) +
+                (equippedRing?.hpBonus ?: 0)
         
     val effectiveMaxMana: Int
-        get() = maxMana + (intelligence * 5) + (spirit * 8)
+        get() = maxMana + (intelligence * 5) + (spirit * 8) +
+                (equippedArmor?.manaBonus ?: 0) +
+                (equippedShield?.manaBonus ?: 0) +
+                (equippedAmulet?.manaBonus ?: 0) +
+                (equippedRing?.manaBonus ?: 0)
     
     // Combat stats derived from attributes
     val critRate: Float
-        get() = (agility * 0.5f).coerceAtMost(50f) // Max 50% crit rate
+        get() = ((agility * 0.5f) +
+                (equippedWeapon?.critRateBonus ?: 0f) +
+                (equippedShield?.critRateBonus ?: 0f) +
+                (equippedAmulet?.critRateBonus ?: 0f) +
+                (equippedRing?.critRateBonus ?: 0f)).coerceAtMost(50f) // Max 50% crit rate
         
     val critDamageMultiplier: Float
-        get() = 1.5f + (strength * 0.05f) // Base 150% + 5% per STR
+        get() = 1.5f + (strength * 0.05f) +
+                (equippedWeapon?.critDamageBonus ?: 0f) +
+                (equippedShield?.critDamageBonus ?: 0f) +
+                (equippedAmulet?.critDamageBonus ?: 0f) +
+                (equippedRing?.critDamageBonus ?: 0f) // Base 150% + 5% per STR
         
     val dodgeChance: Float
-        get() = (agility * 0.3f).coerceAtMost(25f) // Max 25% dodge chance
+        get() = ((agility * 0.3f) +
+                (equippedArmor?.dodgeBonus ?: 0f) +
+                (equippedShield?.dodgeBonus ?: 0f) +
+                (equippedAmulet?.dodgeBonus ?: 0f) +
+                (equippedRing?.dodgeBonus ?: 0f)).coerceAtMost(25f) // Max 25% dodge chance
         
     val hitChance: Float
-        get() = 85f + (agility * 0.4f).coerceAtMost(95f) // Base 85%, max 95%
+        get() = (85f + (agility * 0.4f) +
+                (equippedWeapon?.hitBonus ?: 0f) +
+                (equippedShield?.hitBonus ?: 0f) +
+                (equippedAmulet?.hitBonus ?: 0f) +
+                (equippedRing?.hitBonus ?: 0f)).coerceAtMost(95f) // Base 85%, max 95%
         
     // Attack speed affected by agility and weapon - lower is faster
     val effectiveAttackSpeed: Float
-        get() = (baseAttackSpeed + (equippedWeapon?.attackSpeedBonus ?: 0f)).coerceAtLeast(500f) // Min 0.5 seconds, removed agility bonus
+        get() = (baseAttackSpeed + 
+                (equippedWeapon?.attackSpeedBonus ?: 0f) +
+                (equippedShield?.attackSpeedBonus ?: 0f) +
+                (equippedAmulet?.attackSpeedBonus ?: 0f) +
+                (equippedRing?.attackSpeedBonus ?: 0f)).coerceAtLeast(500f) // Min 0.5 seconds
     
     // Add a status effect
     fun addStatusEffect(type: String, duration: Int, value: Int) {
@@ -126,6 +167,11 @@ data class Player(
         }
         
         return if (descriptions.isEmpty()) "None" else descriptions.joinToString(", ")
+    }
+    
+    // Helper method for experience calculation
+    fun getExperienceForLevel(level: Int): Long {
+        return (level.toDouble().pow(1.5) * 100).toLong()
     }
     
     // Check if player can attack based on attack speed
