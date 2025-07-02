@@ -149,8 +149,6 @@ data class Player(
     }
 
     fun getExperienceForLevel(level: Int): Long {
-        // Implement your logic to calculate experience for a given level
-        // This is just a placeholder example, replace it with your actual formula
         if (level <= 0) return 0
         return (level * level * 100).toLong() // Example: 100 * level^2
     }
