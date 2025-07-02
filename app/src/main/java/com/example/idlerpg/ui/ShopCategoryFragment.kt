@@ -89,6 +89,10 @@ class ShopCategoryFragment : Fragment() {
             ItemType.SHIELD -> player.equippedShield
             ItemType.AMULET -> player.equippedAmulet
             ItemType.RING -> player.equippedRing
+            ItemType.BELT -> player.equippedBelt
+            ItemType.GLOVES -> player.equippedGloves
+            ItemType.BOOTS -> player.equippedBoots
+            ItemType.CLOAK -> player.equippedCloak
         }
         val dialog = ItemComparisonDialogFragment.newInstance(selectedItem, equippedItem)
         dialog.show(parentFragmentManager, ItemComparisonDialogFragment.TAG)
