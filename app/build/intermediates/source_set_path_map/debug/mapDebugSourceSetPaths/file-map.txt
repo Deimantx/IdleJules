@@ -32,10 +32,10 @@ com.example.idlerpg.app-jetified-emoji2-1.2.0-30 C:\Users\Masteris\.gradle\cache
 com.example.idlerpg.app-lifecycle-livedata-core-2.6.2-31 C:\Users\Masteris\.gradle\caches\8.12\transforms\fc318cc0fb6a0ab441dd0db6fbf7ebe2\transformed\lifecycle-livedata-core-2.6.2\res
 com.example.idlerpg.app-jetified-savedstate-1.2.1-32 C:\Users\Masteris\.gradle\caches\8.12\transforms\fdc9d201bac71c0fc3dc4fe11c9373dd\transformed\jetified-savedstate-1.2.1\res
 com.example.idlerpg.app-jetified-lifecycle-viewmodel-ktx-2.6.2-33 C:\Users\Masteris\.gradle\caches\8.12\transforms\fe1b59b045b45cd309bf2cf567fcd310\transformed\jetified-lifecycle-viewmodel-ktx-2.6.2\res
-com.example.idlerpg.app-pngs-34 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\build\generated\res\pngs\debug
-com.example.idlerpg.app-resValues-35 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\build\generated\res\resValues\debug
-com.example.idlerpg.app-packageDebugResources-36 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
-com.example.idlerpg.app-packageDebugResources-37 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
-com.example.idlerpg.app-debug-38 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\build\intermediates\merged_res\debug\mergeDebugResources
-com.example.idlerpg.app-debug-39 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\debug\res
-com.example.idlerpg.app-main-40 C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\res
+com.example.idlerpg.app-pngs-34 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\build\generated\res\pngs\debug
+com.example.idlerpg.app-resValues-35 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\build\generated\res\resValues\debug
+com.example.idlerpg.app-packageDebugResources-36 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.idlerpg.app-packageDebugResources-37 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.idlerpg.app-debug-38 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.example.idlerpg.app-debug-39 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\debug\res
+com.example.idlerpg.app-main-40 C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\res

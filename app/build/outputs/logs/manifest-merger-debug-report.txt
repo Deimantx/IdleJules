@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:2:1-26:12
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:2:1-26:12
+ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:2:1-26:12
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:2:1-26:12
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\98984e487fcd0b7c9807335bc52f49b5\transformed\material-1.9.0\AndroidManifest.xml:17:1-26:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Masteris\.gradle\caches\8.12\transforms\b51a3deccc1ff0c1897c528db204c54e\transformed\constraintlayout-2.1.4\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat-resources:1.6.1] C:\Users\Masteris\.gradle\caches\8.12\transforms\9e08b516a2d57be6eeb203bea1e746d0\transformed\jetified-appcompat-resources-1.6.1\AndroidManifest.xml:17:1-22:12
@@ -53,19 +53,19 @@ MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\User
 MERGED from [androidx.print:print:1.0.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\27414bcfc469e056720a6d4502e3832c\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\728d78f979c1fab2200d37d48d0c8313\transformed\core-runtime-2.2.0\AndroidManifest.xml:17:1-22:12
 	package
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:4:5-34
-		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:4:5-34
+		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 	android:versionName
-		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 	xmlns:tools
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:3:5-51
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:3:5-51
 	android:versionCode
-		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 	xmlns:android
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:2:11-69
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:2:11-69
 application
-ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:6:5-24:19
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:6:5-24:19
+ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:6:5-24:19
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:6:5-24:19
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\98984e487fcd0b7c9807335bc52f49b5\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\98984e487fcd0b7c9807335bc52f49b5\transformed\material-1.9.0\AndroidManifest.xml:24:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Masteris\.gradle\caches\8.12\transforms\b51a3deccc1ff0c1897c528db204c54e\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -83,47 +83,47 @@ MERGED from [androidx.profileinstaller:profileinstaller:1.4.0] C:\Users\Masteris
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Masteris\.gradle\caches\8.12\transforms\3c471572019796489a41285dd1c8a6c4\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\Masteris\.gradle\caches\8.12\transforms\3c471572019796489a41285dd1c8a6c4\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:25:5-31:19
 	android:extractNativeLibs
-		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\38649e5c140f4da394264890bce374a1\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:13:9-35
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:13:9-35
 	android:label
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:11:9-41
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:11:9-41
 	android:fullBackupContent
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:9:9-54
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:9:9-54
 	android:roundIcon
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:12:9-54
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:12:9-54
 	tools:targetApi
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:15:9-29
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:15:9-29
 	android:icon
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:10:9-43
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:10:9-43
 	android:allowBackup
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:7:9-35
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:7:9-35
 	android:theme
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:14:9-45
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:14:9-45
 	android:dataExtractionRules
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:8:9-65
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:8:9-65
 activity#com.example.idlerpg.activities.MainActivity
-ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:16:9-23:20
+ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:16:9-23:20
 	android:exported
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:18:13-36
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:18:13-36
 	android:name
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:17:13-52
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:17:13-52
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:19:13-22:29
+ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:19:13-22:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:20:17-69
+ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:20:17-69
 	android:name
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:20:25-66
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:20:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:21:17-77
+ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:21:17-77
 	android:name
-		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml:21:27-74
+		ADDED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml:21:27-74
 uses-sdk
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
-INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\98984e487fcd0b7c9807335bc52f49b5\transformed\material-1.9.0\AndroidManifest.xml:20:5-22:41
 MERGED from [com.google.android.material:material:1.9.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\98984e487fcd0b7c9807335bc52f49b5\transformed\material-1.9.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\Masteris\.gradle\caches\8.12\transforms\b51a3deccc1ff0c1897c528db204c54e\transformed\constraintlayout-2.1.4\AndroidManifest.xml:5:5-7:41
@@ -221,9 +221,9 @@ MERGED from [androidx.print:print:1.0.0] C:\Users\Masteris\.gradle\caches\8.12\t
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\728d78f979c1fab2200d37d48d0c8313\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.arch.core:core-runtime:2.2.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\728d78f979c1fab2200d37d48d0c8313\transformed\core-runtime-2.2.0\AndroidManifest.xml:20:5-44
 	android:targetSdkVersion
-		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJules2\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Masteris\AndroidStudioProjects\IdleJulesTest\app\src\main\AndroidManifest.xml
 provider#androidx.startup.InitializationProvider
 ADDED from [androidx.emoji2:emoji2:1.2.0] C:\Users\Masteris\.gradle\caches\8.12\transforms\fb43f8b24e91f44f24db4bd245732dfd\transformed\jetified-emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
 MERGED from [androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\Masteris\.gradle\caches\8.12\transforms\d4421a6f436fcc84a759381a4333c130\transformed\jetified-lifecycle-process-2.6.2\AndroidManifest.xml:24:9-32:20

@@ -168,11 +168,7 @@ data class Player(
         
         return if (descriptions.isEmpty()) "None" else descriptions.joinToString(", ")
     }
-    
-    // Helper method for experience calculation
-    fun getExperienceForLevel(level: Int): Long {
-        return (level.toDouble().pow(1.5) * 100).toLong()
-    }
+
     
     // Check if player can attack based on attack speed
     fun canAttack(currentTime: Long): Boolean {
