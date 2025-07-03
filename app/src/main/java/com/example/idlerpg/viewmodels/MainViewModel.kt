@@ -42,29 +42,50 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     init {
-        loadGame()
-        _playerData.value = _gameEngine.getPlayerStats()
-        _monsterData.value = _gameEngine.currentMonster
-        _shopItems.value = _gameEngine.availableShopItems
-        updateExperienceDisplay()
+        try {
+            loadGame()
+            _playerData.value = _gameEngine.getPlayerStats()
+            _monsterData.value = _gameEngine.currentMonster
+            _shopItems.value = _gameEngine.availableShopItems
+            updateExperienceDisplay()
 
-        _gameEngine.setOnMonsterDefeated {
-            _playerData.postValue(_gameEngine.getPlayerStats())
-            _monsterData.postValue(_gameEngine.currentMonster)
-            updateExperienceDisplay()
-        }
-        _gameEngine.setOnPlayerLeveledUp { player ->
-            _playerData.postValue(player)
-            updateExperienceDisplay()
-        }
-        _gameEngine.setOnCombatLog { message ->
-            val currentLog = _combatLog.value ?: mutableListOf()
-            currentLog.add(0, message)
-            if (currentLog.size > maxLogLines) {
-                _combatLog.postValue(currentLog.take(maxLogLines).toMutableList())
-            } else {
-                _combatLog.postValue(currentLog)
+            _gameEngine.setOnMonsterDefeated {
+                try {
+                    _playerData.postValue(_gameEngine.getPlayerStats())
+                    _monsterData.postValue(_gameEngine.currentMonster)
+                    updateExperienceDisplay()
+                } catch (e: Exception) {
+                    android.util.Log.e("MainViewModel", "Error in monster defeated callback", e)
+                }
             }
+            _gameEngine.setOnPlayerLeveledUp { player ->
+                try {
+                    _playerData.postValue(player)
+                    updateExperienceDisplay()
+                } catch (e: Exception) {
+                    android.util.Log.e("MainViewModel", "Error in level up callback", e)
+                }
+            }
+            _gameEngine.setOnCombatLog { message ->
+                try {
+                    val currentLog = _combatLog.value ?: mutableListOf()
+                    currentLog.add(0, message)
+                    if (currentLog.size > maxLogLines) {
+                        _combatLog.postValue(currentLog.take(maxLogLines).toMutableList())
+                    } else {
+                        _combatLog.postValue(currentLog)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("MainViewModel", "Error in combat log callback", e)
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainViewModel", "Critical error in ViewModel initialization", e)
+            // Initialize with empty/default values to prevent crashes
+            _playerData.value = null
+            _monsterData.value = null
+            _shopItems.value = emptyList()
+            _combatLog.value = mutableListOf("Error initializing game. Please restart the app.")
         }
     }
 
@@ -176,16 +197,27 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun loadGame() {
-        val loadedPlayer = _repository.loadPlayer()
-        if (loadedPlayer != null) {
-            _gameEngine.player = loadedPlayer
-            _combatLog.value?.add(0,"Game Loaded!")
-        } else {
-            _combatLog.value?.add(0,"No saved game found. Starting new game.")
+        try {
+            val loadedPlayer = _repository.loadPlayer()
+            if (loadedPlayer != null) {
+                _gameEngine.player = loadedPlayer
+                _combatLog.value?.add(0,"Game Loaded!")
+            } else {
+                _combatLog.value?.add(0,"No saved game found. Starting new game.")
+            }
+            // Update effective stats after loading
+            _gameEngine.player.currentHp = _gameEngine.player.currentHp.coerceAtMost(_gameEngine.player.effectiveMaxHp)
+            _gameEngine.player.currentMana = _gameEngine.player.currentMana.coerceAtMost(_gameEngine.player.effectiveMaxMana)
+        } catch (e: Exception) {
+            android.util.Log.e("MainViewModel", "Error loading game", e)
+            _combatLog.value?.add(0,"Error loading saved game. Starting new game.")
+            // Clear corrupted save data
+            try {
+                _repository.clearSavedData()
+            } catch (clearError: Exception) {
+                android.util.Log.e("MainViewModel", "Error clearing corrupted save data", clearError)
+            }
         }
-        // Update effective stats after loading
-        _gameEngine.player.currentHp = _gameEngine.player.currentHp.coerceAtMost(_gameEngine.player.effectiveMaxHp)
-        _gameEngine.player.currentMana = _gameEngine.player.currentMana.coerceAtMost(_gameEngine.player.effectiveMaxMana)
     }
 
     override fun onCleared() {
